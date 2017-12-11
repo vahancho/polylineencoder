@@ -59,12 +59,29 @@ static bool test2()
     return false;    
 }
 
+static bool test3()
+{
+    // Empty list of points.
+    PolylineEncoder encoder;
+
+    auto res = encoder.encode();
+    std::string exp;
+    if (res == exp) {
+        return true;
+    }
+
+    fprintf(stderr, "test2 fails\n");
+    fprintf(stderr, "\tExpected: '%s', got: '%s'\n", exp.c_str(), res.c_str());
+    return false;
+}
+
 int main(int /*argc*/, char ** /*argv[]*/)
 {
     printf("Start PolylineEncoder tests\n");
 
     if (!test1() ||
-        !test2()) {
+        !test2() ||
+        !test3()) {
         return 1;
     }
     
