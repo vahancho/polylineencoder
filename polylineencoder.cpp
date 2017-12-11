@@ -96,3 +96,8 @@ std::string PolylineEncoder::encode(float value) const
 
     return result;
 }
+
+void PolylineEncoder::clear()
+{
+    m_points.clear();
+}

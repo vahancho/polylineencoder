@@ -45,6 +45,9 @@ public:
   */
   std::string encode() const;
 
+  //! Clears the list of points.
+  void clear();
+
 private:
   //! Encodes a single value according to the compression algorithm.
   std::string encode(float value) const;
