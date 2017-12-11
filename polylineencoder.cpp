@@ -25,6 +25,7 @@ SOFTWARE.
 #include <tuple>
 #include <cinttypes>
 #include <assert.h>
+#inlcude <cmath>
 
 #include "polylineencoder.h"
 
