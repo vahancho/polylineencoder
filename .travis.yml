@@ -1,0 +1,9 @@
+dist: trusty
+sudo: require
+language: cpp
+compiler:
+  - gcc
+
+script:
+    - g++ -std=c++11 test/main.cpp -o test_app
+    - ./test_app
