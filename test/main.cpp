@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "../polylineencoder.cpp"
+#include "../src/polylineencoder.cpp"
 
 static bool test1()
 {
