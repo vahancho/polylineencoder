@@ -30,6 +30,30 @@ static bool test(const std::string &testName,
 {
     auto res = encoder.encode();
     if (res == expected) {
+        // Decode back.
+        auto decodedPolyline = encoder.decode(res);
+        const auto &polyline = encoder.polyline();
+        if (decodedPolyline.size() != polyline.size())
+        {
+            fprintf(stderr, "%s fails\n", testName.c_str());
+            fprintf(stderr, "\tDecode error: incorrect number of points: '%d' instead of '%d'\n",
+                    decodedPolyline.size(), polyline.size());
+            return false;
+        }
+
+        // Compare polylines - they should be equal.
+        for (size_t i = 0; i < polyline.size(); ++i)
+        {
+            const auto &p1 = polyline.at(i);
+            const auto &p2 = decodedPolyline.at(i);
+            if (p1 != p2)
+            {
+                fprintf(stderr, "%s fails\n", testName.c_str());
+                fprintf(stderr, "\tDecode error: decoded points are different\n");
+                return false;
+            }
+        }
+
         return true;
     }
 

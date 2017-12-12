@@ -36,24 +36,39 @@ SOFTWARE.
 class PolylineEncoder
 {
 public:
-  //! Adds new point with the given \p latitude and \p longitude for encoding.
-  void addPoint(double latitude, double longitude);
+    using Point = std::tuple<double, double>;
+    using Polyline = std::vector<Point>;
 
-  //! Encode the points according to the defined compression algorithm.
-  /*!
-    \return The encoded points.
-  */
-  std::string encode() const;
+    //! Adds new point with the given \p latitude and \p longitude for encoding.
+    void addPoint(double latitude, double longitude);
 
-  //! Clears the list of points.
-  void clear();
+    //! Encode the polyline according to the defined compression algorithm.
+    /*!
+    \return The encoded polyline as string.
+    */
+    std::string encode() const;
+
+    //! Returns the existing polyline.
+    const Polyline &polyline() const;
+
+    //! Clears the list of polyline.
+    void clear();
+
+    //! Returns the result of encoding of the given polyline.
+    static std::string encode(const Polyline &polyline);
+
+    //! Returns polyline decoded from the given \p coordinates string.
+    static Polyline decode(const std::string &coordinates);
 
 private:
-  //! Encodes a single value according to the compression algorithm.
-  std::string encode(double value) const;
+    //! Encodes a single value according to the compression algorithm.
+    static std::string encode(double value);
 
-  //! Store the points.
-  std::vector<std::tuple<double, double>> m_points;
+    //! Decodes the current decimal value out of string.
+    static double decode(const std::string &coords, size_t &i);
+
+    //! Store the polyline - the list of points.
+    Polyline m_polyline;
 };
 
 #endif // POLYLINEENCODER_H
