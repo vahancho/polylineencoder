@@ -3,7 +3,7 @@ Another C++11 implementation of [Encoded Polyline Algorithm](https://developers.
 
 [![Build Status](https://travis-ci.org/vahancho/polylineencoder.svg?branch=master)][1]
 
-Usage examples:
+## Example:
 
 ```cpp
 PolylineEncoder encoder;
@@ -16,5 +16,9 @@ encoder.addPoint(90.0, 180.0);
 auto res = encoder.encode(); // "~bidP~fsia@_cidP_gsia@_cidP_gsia@"
 encoder.clear(); // Clear the list of points.
 ```
+
+## See Also
+
+* [Encoded Polyline Algorithm](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)
 
 [1]: https://travis-ci.org/vahancho/polylineencoder
