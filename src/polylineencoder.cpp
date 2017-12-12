@@ -40,28 +40,24 @@ void PolylineEncoder::addPoint(float latitude, float longitude)
 std::string PolylineEncoder::encode() const
 {
     std::string result;
-    if (!m_points.empty()) {
-        // The first segment: offset from (.0, .0)
-        const auto &tuple0 = m_points.front();
-        float latPrev = std::get<0>(tuple0);
-        float lonPrev = std::get<1>(tuple0);
 
-        result.append(encode(latPrev));
-        result.append(encode(lonPrev));
+    // The first segment: offset from (.0, .0)
+    float latPrev = .0;
+    float lonPrev = .0;
 
-        for (size_t i = 1; i < m_points.size(); i++) {
-            const auto &tuple = m_points[i];
-            const auto lat = std::get<0>(tuple);
-            const auto lon = std::get<1>(tuple);
+    for (const auto &tuple : m_points)
+    {
+      const auto lat = std::get<0>(tuple);
+      const auto lon = std::get<1>(tuple);
 
-            // Offset from the previous point
-            result.append(encode(lat - latPrev));
-            result.append(encode(lon - lonPrev));
+      // Offset from the previous point
+      result.append(encode(lat - latPrev));
+      result.append(encode(lon - lonPrev));
 
-            latPrev = lat;
-            lonPrev = lon;
-        }
+      latPrev = lat;
+      lonPrev = lon;
     }
+
     return result;
 }
 
