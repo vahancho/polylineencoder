@@ -64,7 +64,6 @@ std::string PolylineEncoder::encode() const
 std::string PolylineEncoder::encode(double value) const
 {
     int32_t e5 = std::round(value * 100000.0); // 2
-    printf("offset: %d\n", e5);
 
     e5 <<= 1;                                  // (4)
 
