@@ -37,7 +37,7 @@ class PolylineEncoder
 {
 public:
   //! Adds new point with the given \p latitude and \p longitude for encoding.
-  void addPoint(float latitude, float longitude);
+  void addPoint(double latitude, double longitude);
 
   //! Encode the points according to the defined compression algorithm.
   /*!
@@ -50,10 +50,10 @@ public:
 
 private:
   //! Encodes a single value according to the compression algorithm.
-  std::string encode(float value) const;
+  std::string encode(double value) const;
 
   //! Store the points.
-  std::vector<std::tuple<float, float>> m_points;
+  std::vector<std::tuple<double, double>> m_points;
 };
 
 #endif // POLYLINEENCODER_H

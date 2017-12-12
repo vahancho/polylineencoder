@@ -29,7 +29,7 @@ SOFTWARE.
 
 #include "polylineencoder.h"
 
-void PolylineEncoder::addPoint(float latitude, float longitude)
+void PolylineEncoder::addPoint(double latitude, double longitude)
 {
     assert(latitude <= 90.0 && latitude >= -90.0);
     assert(latitude <= 180.0 && latitude >= -180.0);
@@ -42,8 +42,8 @@ std::string PolylineEncoder::encode() const
     std::string result;
 
     // The first segment: offset from (.0, .0)
-    float latPrev = .0;
-    float lonPrev = .0;
+    double latPrev = .0;
+    double lonPrev = .0;
 
     for (const auto &tuple : m_points)
     {
@@ -61,9 +61,10 @@ std::string PolylineEncoder::encode() const
     return result;
 }
 
-std::string PolylineEncoder::encode(float value) const
+std::string PolylineEncoder::encode(double value) const
 {
     int32_t e5 = std::round(value * 100000.0); // 2
+    printf("offset: %d\n", e5);
 
     e5 <<= 1;                                  // (4)
 
