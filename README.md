@@ -1,7 +1,8 @@
 # Polyline Encoder
 Another C++11 implementation of [Encoded Polyline Algorithm](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)
 
-[![Build Status](https://travis-ci.org/vahancho/polylineencoder.svg?branch=master)][1]
+[![Build Status](https://travis-ci.org/vahancho/polylineencoder.svg?branch=master)](https://travis-ci.org/vahancho/polylineencoder)
+[![Build status](https://ci.appveyor.com/api/projects/status/6tg1kkp5fgk3x2fd?svg=true)](https://ci.appveyor.com/project/vahancho/polylineencoder)
 
 ## Example:
 
@@ -24,4 +25,3 @@ auto polyline = PolylineEncoder::decode("~bidP~fsia@_cidP_gsia@_cidP_gsia@");
 
 * [Encoded Polyline Algorithm](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)
 
-[1]: https://travis-ci.org/vahancho/polylineencoder
