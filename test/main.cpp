@@ -24,19 +24,26 @@ SOFTWARE.
 
 #include "../src/polylineencoder.cpp"
 
+static bool test(const std::string &testName,
+                 const PolylineEncoder &encoder,
+                 const std::string &expected)
+{
+    auto res = encoder.encode();
+    if (res == expected) {
+        return true;
+    }
+
+    fprintf(stderr, "%s fails\n", testName.c_str());
+    fprintf(stderr, "\tExpected: '%s', got: '%s'\n", expected.c_str(), res.c_str());
+    return false;    
+}
+
 static bool test1()
 {
     PolylineEncoder encoder;
     encoder.addPoint(.0, .0);
-    
-    auto res = encoder.encode();
-    if (res == "??") {
-        return true;
-    }
-    
-    fprintf(stderr, "test1 fails\n");
-    fprintf(stderr, "\tExpected: '%s', got: '%s'\n", "??", res.c_str());
-    return false;    
+
+    return test("test1", encoder, "??");
 }
 
 static bool test2()
@@ -47,16 +54,8 @@ static bool test2()
     encoder.addPoint(-90.0, -180.0);
     encoder.addPoint(.0, .0);
     encoder.addPoint(90.0, 180.0);
-    
-    auto res = encoder.encode();
-    std::string exp("~bidP~fsia@_cidP_gsia@_cidP_gsia@");
-    if (res == exp) {
-        return true;
-    }
-    
-    fprintf(stderr, "test2 fails\n");
-    fprintf(stderr, "\tExpected: '%s', got: '%s'\n", exp.c_str(), res.c_str());
-    return false;    
+
+    return test("test2", encoder, "~bidP~fsia@_cidP_gsia@_cidP_gsia@");
 }
 
 static bool test3()
@@ -64,15 +63,18 @@ static bool test3()
     // Empty list of points.
     PolylineEncoder encoder;
 
-    auto res = encoder.encode();
-    std::string exp;
-    if (res == exp) {
-        return true;
-    }
+    return test("test3", encoder, std::string());
+}
 
-    fprintf(stderr, "test2 fails\n");
-    fprintf(stderr, "\tExpected: '%s', got: '%s'\n", exp.c_str(), res.c_str());
-    return false;
+static bool test4()
+{
+    // Coordinates from https://developers.google.com/maps/documentation/utilities/polylinealgorithm
+    PolylineEncoder encoder;
+    encoder.addPoint(38.5, -120.2);
+    encoder.addPoint(40.7, -120.95);
+    encoder.addPoint(43.252, -126.453);
+
+    return test("test4", encoder, "_p~iF~ps|U_ulLnnqC_mqNvxq`@");
 }
 
 int main(int /*argc*/, char ** /*argv[]*/)
@@ -81,7 +83,8 @@ int main(int /*argc*/, char ** /*argv[]*/)
 
     if (!test1() ||
         !test2() ||
-        !test3()) {
+        !test3() ||
+        !test4()) {
         return 1;
     }
     
