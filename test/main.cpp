@@ -44,9 +44,9 @@ static bool test2()
     PolylineEncoder encoder;
 
     // Poles and equator.
-    encoder.addPoint(-90, -180.0);
+    encoder.addPoint(-90.0, -180.0);
     encoder.addPoint(.0, .0);
-    encoder.addPoint(90, 180.0);
+    encoder.addPoint(90.0, 180.0);
     
     auto res = encoder.encode();
     std::string exp("~bidP~fsia@_cidP_gsia@_cidP_gsia@");
