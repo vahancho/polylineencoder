@@ -10,7 +10,7 @@ No installation required. Just compile *polylineencoder.h(.cpp)* in your project
 
 ## Prerequisites
 
-No special requirements except *C++11* compliant compiler. The class is tested with *gcc 4.8.4* and *MS C++ 12.0* (Visual Studio 2013).
+No special requirements except *C++11* compliant compiler. The class is tested with *gcc 4.8.4* and *MSVC 12.0* (Visual Studio 2013).
 For more details see the CI badges (*Travis CI & AppVeyor CI*).
 
 ## Usage Example:
