@@ -44,7 +44,7 @@ commands from the terminal, assuming that compiler and environment are already c
 ##### Linux (gcc)
 ```
 cd test
-g++ -std=c++11 test/main.cpp -o test
+g++ -std=c++11 main.cpp -o test
 ./test
 ```
 
