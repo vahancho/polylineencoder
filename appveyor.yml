@@ -27,8 +27,8 @@ configuration:
 build_script:
     - call "c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
     - cd C:\projects\polylineencoder\test
-    - cl /EHsc main.cpp
+    - cl /W4 /EHsc main.cpp /link /out:test.exe
 
 test_script:
-  - cd C:\projects\polylineencoder\test
-  - main.exe
+    - cd C:\projects\polylineencoder\test
+    - test.exe
