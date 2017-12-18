@@ -1,5 +1,5 @@
 # Polyline Encoder/Decoder
-Another C++11 implementation of [Encoded Polyline Algorithm](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)
+C++ implementation of [Google Encoded Polyline Algorithm Format](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)
 
 [![Build Status](https://travis-ci.org/vahancho/polylineencoder.svg?branch=master)](https://travis-ci.org/vahancho/polylineencoder)
 [![Build status](https://ci.appveyor.com/api/projects/status/6tg1kkp5fgk3x2fd?svg=true)](https://ci.appveyor.com/project/vahancho/polylineencoder)
