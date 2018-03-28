@@ -6,8 +6,7 @@ compiler:
 before_install:
   - pip install --user cpp-coveralls
 script:
-    - g++ -std=c++11 -fprofile-arcs -ftest-coverage test/main.cpp -o test_app
+    - g++ -std=c++11 -coverage test/main.cpp -o test_app
     - ./test_app
-    - gcov test/main.cpp -m
 after_success:
-  - coveralls --exclude lib --exclude tests --gcov-options '\-lp'
+  - coveralls --verbose 
