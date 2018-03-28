@@ -3,6 +3,7 @@ C++ implementation of [Google Encoded Polyline Algorithm Format](https://develop
 
 [![Build Status](https://travis-ci.org/vahancho/polylineencoder.svg?branch=master)](https://travis-ci.org/vahancho/polylineencoder)
 [![Build status](https://ci.appveyor.com/api/projects/status/6tg1kkp5fgk3x2fd?svg=true)](https://ci.appveyor.com/project/vahancho/polylineencoder)
+[![Coverage Status](https://coveralls.io/repos/github/vahancho/polylineencoder/badge.svg?branch=master)](https://coveralls.io/github/vahancho/polylineencoder?branch=master)
 
 ## Installation
 
