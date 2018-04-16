@@ -51,7 +51,7 @@ public:
     //! Returns the existing polyline.
     const Polyline &polyline() const;
 
-    //! Clears the list of polyline.
+    //! Clears the list of points.
     void clear();
 
     //! Returns the result of encoding of the given polyline.
