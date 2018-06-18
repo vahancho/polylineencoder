@@ -38,7 +38,7 @@ static const int    s_6bitMask    = 0x20; // 0b100000 = 32
 void PolylineEncoder::addPoint(double latitude, double longitude)
 {
     assert(latitude <= 90.0 && latitude >= -90.0);
-    assert(latitude <= 180.0 && latitude >= -180.0);
+    assert(longitude <= 180.0 && longitude >= -180.0);
     
     m_polyline.emplace_back(latitude, longitude);
 }
