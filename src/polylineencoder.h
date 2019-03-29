@@ -27,6 +27,7 @@
 
 #include <string>
 #include <vector>
+#include <tuple>
 
 //! Implements Google's polyline compression algorithm.
 /*!
