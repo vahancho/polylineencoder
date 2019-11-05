@@ -68,7 +68,7 @@ static bool test1()
     PolylineEncoder encoder;
     encoder.addPoint(.0, .0);
 
-    return test(__func__, encoder, "??");
+    return test(__FUNCTION__, encoder, "??");
 }
 
 static bool test2()
@@ -80,7 +80,7 @@ static bool test2()
     encoder.addPoint(.0, .0);
     encoder.addPoint(90.0, 180.0);
 
-    return test(__func__, encoder, "~bidP~fsia@_cidP_gsia@_cidP_gsia@");
+    return test(__FUNCTION__, encoder, "~bidP~fsia@_cidP_gsia@_cidP_gsia@");
 }
 
 static bool test3()
@@ -88,7 +88,7 @@ static bool test3()
     // Empty list of points.
     PolylineEncoder encoder;
 
-    return test(__func__, encoder, std::string());
+    return test(__FUNCTION__, encoder, std::string());
 }
 
 static bool test4()
@@ -99,7 +99,7 @@ static bool test4()
     encoder.addPoint(40.7, -120.95);
     encoder.addPoint(43.252, -126.453);
 
-    return test(__func__, encoder, "_p~iF~ps|U_ulLnnqC_mqNvxq`@");
+    return test(__FUNCTION__, encoder, "_p~iF~ps|U_ulLnnqC_mqNvxq`@");
 }
 
 static bool test5()
@@ -112,7 +112,7 @@ static bool test5()
         decodedPolyline[2] == PolylineEncoder::Point(43.252, -126.453)) {
         return true;
     } else {
-        fprintf(stderr, "%s: fails\n", __func__);
+        fprintf(stderr, "%s: fails\n", __FUNCTION__);
         return false;
     }
 }
@@ -124,7 +124,7 @@ static bool test6()
     if (decodedPolyline.size() == 0) {
         return true;
     } else {
-        fprintf(stderr, "%s: fails\n", __func__);
+        fprintf(stderr, "%s: fails\n", __FUNCTION__);
         return false;
     }
 }
@@ -136,7 +136,7 @@ static bool test7()
     if (decodedPolyline.size() == 0) {
         return true;
     } else {
-        fprintf(stderr, "%s: fails\n", __func__);
+        fprintf(stderr, "%s: fails\n", __FUNCTION__);
         return false;
     }
 }
@@ -148,7 +148,7 @@ static bool test8()
     if (decodedPolyline.size() == 0) {
         return true;
     } else {
-        fprintf(stderr, "%s: fails\n", __func__);
+        fprintf(stderr, "%s: fails\n", __FUNCTION__);
         return false;
     }
 }
@@ -160,7 +160,7 @@ static bool test9()
     if (decodedPolyline.size() == 0) {
         return true;
     } else {
-        fprintf(stderr, "%s: fails\n", __func__);
+        fprintf(stderr, "%s: fails\n", __FUNCTION__);
         return false;
     }
 }
@@ -172,7 +172,7 @@ static bool test10()
     if (decodedPolyline.size() == 0) {
         return true;
     } else {
-        fprintf(stderr, "%s: fails\n", __func__);
+        fprintf(stderr, "%s: fails\n", __FUNCTION__);
         return false;
     }
 }
@@ -185,7 +185,7 @@ static bool test11()
     if (decodedPolyline.size() == 0) {
         return true;
     } else {
-        fprintf(stderr, "%s: fails\n", __func__);
+        fprintf(stderr, "%s: fails\n", __FUNCTION__);
         return false;
     }
 }
@@ -198,7 +198,7 @@ static bool test12()
     if (decodedPolyline.size() == 0) {
         return true;
     } else {
-        fprintf(stderr, "%s: fails\n", __func__);
+        fprintf(stderr, "%s: fails\n", __FUNCTION__);
         return false;
     }
 }
@@ -210,7 +210,7 @@ static bool test13()
     if (decodedPolyline.size() == 0) {
         return true;
     } else {
-        fprintf(stderr, "%s: fails\n", __func__);
+        fprintf(stderr, "%s: fails\n", __FUNCTION__);
         return false;
     }
 }
