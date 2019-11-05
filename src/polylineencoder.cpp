@@ -105,16 +105,18 @@ std::string PolylineEncoder::encode(const PolylineEncoder::Polyline &polyline)
 
 double PolylineEncoder::decode(const std::string &coords, size_t &i)
 {
-    assert(i < coords.size());
-
     int32_t result = 0;
     int shift = 0;
     char c = 0;
     do {
-        c = coords.at(i++);
-        c -= s_asciiOffset;      // (10)
-        result |= (c & s_5bitMask) << shift;
-        shift += s_chunkSize;    // (7)
+        if (i < coords.size()) {
+            c = coords.at(i++);
+            c -= s_asciiOffset;      // (10)
+            result |= (c & s_5bitMask) << shift;
+            shift += s_chunkSize;    // (7)
+        } else {
+            return NAN;
+        }
     } while (c >= s_6bitMask);
 
     if (result & 1) {
@@ -136,12 +138,21 @@ PolylineEncoder::Polyline PolylineEncoder::decode(const std::string &coords)
         auto lat = decode(coords, i);
         auto lon = decode(coords, i);
 
-        if (!polyline.empty()) {
-            const auto &prevPoint = polyline.back();
-            lat += std::get<0>(prevPoint);
-            lon += std::get<1>(prevPoint);
+        if (!std::isnan(lat) &&
+            !std::isnan(lon) &&
+            fabs(lat) <= 90.0 &&
+            fabs(lon) <= 180.0) {
+            if (!polyline.empty()) {
+                const auto &prevPoint = polyline.back();
+                lat += std::get<0>(prevPoint);
+                lon += std::get<1>(prevPoint);
+            }
+            polyline.emplace_back(lat, lon);
+        } else {
+          // Invalid polyline string: Failed, return no coordinates.
+          polyline.clear();
+          return polyline;
         }
-        polyline.emplace_back(lat, lon);
     }
 
     return polyline;

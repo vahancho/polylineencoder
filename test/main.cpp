@@ -37,7 +37,8 @@ static bool test(const std::string &testName,
         {
             fprintf(stderr, "%s fails\n", testName.c_str());
             fprintf(stderr, "\tDecode error: incorrect number of points: '%d' instead of '%d'\n",
-                    decodedPolyline.size(), polyline.size());
+                    static_cast<int>(decodedPolyline.size()),
+                    static_cast<int>(polyline.size()));
             return false;
         }
 
@@ -67,7 +68,7 @@ static bool test1()
     PolylineEncoder encoder;
     encoder.addPoint(.0, .0);
 
-    return test("test1", encoder, "??");
+    return test(__func__, encoder, "??");
 }
 
 static bool test2()
@@ -79,7 +80,7 @@ static bool test2()
     encoder.addPoint(.0, .0);
     encoder.addPoint(90.0, 180.0);
 
-    return test("test2", encoder, "~bidP~fsia@_cidP_gsia@_cidP_gsia@");
+    return test(__func__, encoder, "~bidP~fsia@_cidP_gsia@_cidP_gsia@");
 }
 
 static bool test3()
@@ -87,7 +88,7 @@ static bool test3()
     // Empty list of points.
     PolylineEncoder encoder;
 
-    return test("test3", encoder, std::string());
+    return test(__func__, encoder, std::string());
 }
 
 static bool test4()
@@ -98,20 +99,140 @@ static bool test4()
     encoder.addPoint(40.7, -120.95);
     encoder.addPoint(43.252, -126.453);
 
-    return test("test4", encoder, "_p~iF~ps|U_ulLnnqC_mqNvxq`@");
+    return test(__func__, encoder, "_p~iF~ps|U_ulLnnqC_mqNvxq`@");
 }
 
-int main(int /*argc*/, char ** /*argv[]*/)
+static bool test5()
+{
+    // Decode a valid polyline string.
+    auto decodedPolyline = PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mqNvxq`@");
+    if (decodedPolyline.size() == 3 &&
+        decodedPolyline[0] == PolylineEncoder::Point(38.5, -120.2) &&
+        decodedPolyline[1] == PolylineEncoder::Point(40.7, -120.95) &&
+        decodedPolyline[2] == PolylineEncoder::Point(43.252, -126.453)) {
+        return true;
+    } else {
+        fprintf(stderr, "%s: fails\n", __func__);
+        return false;
+    }
+}
+
+static bool test6()
+{
+    // String too short, last byte missing makes last coordinate invalid.
+    auto decodedPolyline = PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mqNvxq`");
+    if (decodedPolyline.size() == 0) {
+        return true;
+    } else {
+        fprintf(stderr, "%s: fails\n", __func__);
+        return false;
+    }
+}
+
+static bool test7()
+{
+    // String too short, last bytes missing makes last coordinate.lon missing.
+    auto decodedPolyline = PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mqN");
+    if (decodedPolyline.size() == 0) {
+        return true;
+    } else {
+        fprintf(stderr, "%s: fails\n", __func__);
+        return false;
+    }
+}
+
+static bool test8()
+{
+    // String too short, last coordinate.lon missing and last coordinate.lat invalid.
+    auto decodedPolyline = PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mq");
+    if (decodedPolyline.size() == 0) {
+        return true;
+    } else {
+        fprintf(stderr, "%s: fails\n", __func__);
+        return false;
+    }
+}
+
+static bool test9()
+{
+    // String too short, last coordinate.lon missing and last coordinate.lat invalid.
+    auto decodedPolyline = PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mq");
+    if (decodedPolyline.size() == 0) {
+        return true;
+    } else {
+        fprintf(stderr, "%s: fails\n", __func__);
+        return false;
+    }
+}
+
+static bool test10()
+{
+    // Third byte changed from '~' to ' ', generating an invalid fourth coordinate.
+    auto decodedPolyline = PolylineEncoder::decode("_p iF~ps|U_ulLnnqC_mqNvxq`@");
+    if (decodedPolyline.size() == 0) {
+        return true;
+    } else {
+        fprintf(stderr, "%s: fails\n", __func__);
+        return false;
+    }
+}
+
+static bool test11()
+{
+    // Fifth byte changed from 'F' to 'f' changing the 'next byte' flag in it,
+    // leading to an extremely large latitude for the first coordinate.
+    auto decodedPolyline = PolylineEncoder::decode("_p~if~ps|U_ulLnnqC_mqNvxq`@");
+    if (decodedPolyline.size() == 0) {
+        return true;
+    } else {
+        fprintf(stderr, "%s: fails\n", __func__);
+        return false;
+    }
+}
+
+static bool test12()
+{
+    // Tenth byte changed from 'U' to 'u' changing the 'next byte' flag in it,
+    // leading to an extremely large longitude for the first coordinate.
+    auto decodedPolyline = PolylineEncoder::decode("_p~iF~ps|u_ulLnnqC_mqNvxq`@");
+    if (decodedPolyline.size() == 0) {
+        return true;
+    } else {
+        fprintf(stderr, "%s: fails\n", __func__);
+        return false;
+    }
+}
+
+static bool test13()
+{
+    // Empty string.
+    auto decodedPolyline = PolylineEncoder::decode("");
+    if (decodedPolyline.size() == 0) {
+        return true;
+    } else {
+        fprintf(stderr, "%s: fails\n", __func__);
+        return false;
+    }
+}
+
+int main(int, char**)
 {
     printf("Start PolylineEncoder tests\n");
 
-    if (!test1() ||
-        !test2() ||
-        !test3() ||
-        !test4()) {
-        return 1;
-    }
+    bool ok = test1();
+    ok = test2() && ok;
+    ok = test3() && ok;
+    ok = test4() && ok;
+    ok = test5() && ok;
+    ok = test6() && ok;
+    ok = test7() && ok;
+    ok = test8() && ok;
+    ok = test9() && ok;
+    ok = test10() && ok;
+    ok = test11() && ok;
+    ok = test12() && ok;
+    ok = test13() && ok;
     
-    printf("PolylineEncoder tests passed\n");
-    return 0;
+    printf("PolylineEncoder tests %s\n", ok ? "passed" : "failed");
+    return ok ? 0 : 1;
 }
