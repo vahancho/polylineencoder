@@ -111,10 +111,14 @@ double PolylineEncoder::decode(const std::string &coords, size_t &i)
     int shift = 0;
     char c = 0;
     do {
-        c = coords.at(i++);
-        c -= s_asciiOffset;      // (10)
-        result |= (c & s_5bitMask) << shift;
-        shift += s_chunkSize;    // (7)
+        if (i < coords.size()) {
+            c = coords.at(i++);
+            c -= s_asciiOffset;      // (10)
+            result |= (c & s_5bitMask) << shift;
+            shift += s_chunkSize;    // (7)
+        } else {
+            return NAN;
+        }
     } while (c >= s_6bitMask);
 
     if (result & 1) {
@@ -133,8 +137,22 @@ PolylineEncoder::Polyline PolylineEncoder::decode(const std::string &coords)
     size_t i = 0;
     while (i < coords.size())
     {
-        auto lat = decode(coords, i);
-        auto lon = decode(coords, i);
+        double lat = decode(coords, i);
+        if (std::isnan(lat) || fabs(lat) > 90.0) {
+            // Invalid latitude, implies invalid polyline string.
+            polyline.clear();
+            break;  // exit while
+        }
+
+        double lon = NAN;
+        if (i < coords.size()) {
+            lon = decode(coords, i);
+        }
+        if (std::isnan(lon) || fabs(lon) > 180.0) {
+            // Invalid longitude, implies invalid polyline string.
+            polyline.clear();
+            break;  // exit while
+        }
 
         if (!polyline.empty()) {
             const auto &prevPoint = polyline.back();
