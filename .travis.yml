@@ -9,4 +9,4 @@ script:
     - g++ -std=c++11 -coverage test/main.cpp -o test_app
     - ./test_app
 after_success:
-  - coveralls --verbose 
+  - coveralls --verbose --exclude test
