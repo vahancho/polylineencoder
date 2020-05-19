@@ -215,6 +215,22 @@ static bool test13()
     }
 }
 
+static bool test14()
+{
+    // Avoid cumulated error
+    PolylineEncoder encoder;
+    encoder.addPoint(0.0000005, 0.0000005);
+    encoder.addPoint(0.0000000, 0.0000000);
+
+    // Intentionally not use test() function as the precision cut generates difference between encode and decode
+    if (encoder.encode() == "????") {
+        return true;
+    } else {
+        fprintf(stderr, "%s: fails\n", __FUNCTION__);
+        return false;
+    }
+}
+
 int main(int, char**)
 {
     printf("Start PolylineEncoder tests\n");
@@ -232,7 +248,8 @@ int main(int, char**)
     ok = test11() && ok;
     ok = test12() && ok;
     ok = test13() && ok;
-    
+    ok = test14() && ok;
+
     printf("PolylineEncoder tests %s\n", ok ? "passed" : "failed");
     return ok ? 0 : 1;
 }
