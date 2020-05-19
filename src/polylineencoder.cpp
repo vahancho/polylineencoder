@@ -48,13 +48,11 @@ std::string PolylineEncoder::encode() const
     return encode(m_polyline);
 }
 
-std::string PolylineEncoder::encode(double value)
+std::string PolylineEncoder::encode(int32_t e5)
 {
-    int32_t e5 = std::round(value * s_presision); // (2)
-
     e5 <<= 1;                                     // (4)
 
-    if (value < 0) {
+    if (e5 < 0) {
         e5 = ~e5;                                 // (5)
     }
 
@@ -83,14 +81,14 @@ std::string PolylineEncoder::encode(const PolylineEncoder::Polyline &polyline)
 {
     std::string result;
 
-    // The first segment: offset from (.0, .0)
-    double latPrev = .0;
-    double lonPrev = .0;
+    // The first segment: offset from (0, 0)
+    int32_t latPrev = 0;
+    int32_t lonPrev = 0;
 
     for (const auto &tuple : polyline)
     {
-      const auto lat = std::get<0>(tuple);
-      const auto lon = std::get<1>(tuple);
+      const auto lat = std::round(std::get<0>(tuple) * s_presision); // (2)
+      const auto lon = std::round(std::get<1>(tuple) * s_presision); // (2)
 
       // Offset from the previous point
       result.append(encode(lat - latPrev));

@@ -63,7 +63,7 @@ public:
 
 private:
     //! Encodes a single value according to the compression algorithm.
-    static std::string encode(double value);
+    static std::string encode(int32_t e5);
 
     //! Decodes the current decimal value out of string.
     static double decode(const std::string &coords, size_t &i);
