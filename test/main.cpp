@@ -223,7 +223,25 @@ static bool test14()
     encoder.addPoint(0.0000000, 0.0000000);
 
     // Intentionally not use test() function as the precision cut generates difference between encode and decode
+    // Expectation comes from https://developers.google.com/maps/documentation/utilities/polylineutility
     if (encoder.encode() == "????") {
+        return true;
+    } else {
+        fprintf(stderr, "%s: fails\n", __FUNCTION__);
+        return false;
+    }
+}
+
+static bool test15()
+{
+    // Avoid cumulated error
+    PolylineEncoder encoder;
+    encoder.addPoint(47.231174468994141, 16.62629508972168);
+    encoder.addPoint(47.231208801269531, 16.626440048217773);
+
+    // Intentionally not use test() function as the precision cut generates difference between encode and decode
+    // Expectation comes from https://developers.google.com/maps/documentation/utilities/polylineutility
+    if (encoder.encode() == "yyg_HkindBG[") {
         return true;
     } else {
         fprintf(stderr, "%s: fails\n", __FUNCTION__);
@@ -249,6 +267,7 @@ int main(int, char**)
     ok = test12() && ok;
     ok = test13() && ok;
     ok = test14() && ok;
+    ok = test15() && ok;
 
     printf("PolylineEncoder tests %s\n", ok ? "passed" : "failed");
     return ok ? 0 : 1;
