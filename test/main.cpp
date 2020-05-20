@@ -45,8 +45,8 @@ static bool test(const std::string &testName,
         // Compare polylines - they should be equal.
         for (size_t i = 0; i < polyline.size(); ++i)
         {
-            const auto &p1 = polyline.at(i);
-            const auto &p2 = decodedPolyline.at(i);
+            const auto &p1 = polyline[i];
+            const auto &p2 = decodedPolyline[i];
             if (p1 != p2)
             {
                 fprintf(stderr, "%s fails\n", testName.c_str());

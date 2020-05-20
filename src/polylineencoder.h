@@ -38,7 +38,32 @@ class PolylineEncoder
 {
 public:
     using Point = std::tuple<double, double>;
-    using Polyline = std::vector<Point>;
+
+    class Polyline
+    {
+    public:
+        using iterator = std::vector<Point>::iterator;
+        using const_iterator = std::vector<Point>::const_iterator;
+
+        const std::vector<Point>& getPoints() const;
+        void addPoint(const Point& point);
+        void addPoint(double latitude, double longitude);
+
+        void clear();
+        bool empty() const;
+        size_t size() const;
+        const Point& operator[](size_t index) const;
+        const Point& back() const;
+
+        iterator begin();
+        iterator end();
+
+        const_iterator begin() const;
+        const_iterator end() const;
+
+    private:
+        std::vector<Point> m_points;
+    };
 
     //! Adds new point with the given \p latitude and \p longitude for encoding.
     void addPoint(double latitude, double longitude);
@@ -63,7 +88,7 @@ public:
 
 private:
     //! Encodes a single value according to the compression algorithm.
-    static std::string encode(int32_t e5);
+    static std::string encode(double value);
 
     //! Decodes the current decimal value out of string.
     static double decode(const std::string &coords, size_t &i);
