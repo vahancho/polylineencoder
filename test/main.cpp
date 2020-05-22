@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include <limits>
 #include "../src/polylineencoder.cpp"
 
 static bool operator==(const PolylineEncoder::Point& l, const PolylineEncoder::Point& r)
