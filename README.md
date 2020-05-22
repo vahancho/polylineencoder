@@ -1,13 +1,15 @@
 # Polyline Encoder/Decoder
 C++ implementation of [Google Encoded Polyline Algorithm Format](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)
 
+The implementation guarantees to conform with the results of the [Google Interactive Polyline Encoder Utility](https://developers.google.com/maps/documentation/utilities/polylineutility)
+
 [![Build Status](https://travis-ci.org/vahancho/polylineencoder.svg?branch=master)](https://travis-ci.org/vahancho/polylineencoder)
 [![Build status](https://ci.appveyor.com/api/projects/status/6tg1kkp5fgk3x2fd?svg=true)](https://ci.appveyor.com/project/vahancho/polylineencoder)
 [![Coverage Status](https://coveralls.io/repos/github/vahancho/polylineencoder/badge.svg?branch=master)](https://coveralls.io/github/vahancho/polylineencoder?branch=master)
 
 ## Installation
 
-No installation required. Just compile *polylineencoder.h(.cpp)* in your project and use `PolylineEncoder` class.
+No installation required. Just compile *polylineencoder.h(.cpp)* in your project and use `gepaf::PolylineEncoder` class.
 
 ## Prerequisites
 
@@ -16,8 +18,10 @@ For more details see the CI badges (*Travis CI & AppVeyor CI*).
 
 ## Usage Example:
 
+All code is in `gepaf` namespace. `gepaf` stands for *Google Encoded Polyline Algorithm Format*.
+
 ```cpp
-PolylineEncoder encoder;
+gepaf::PolylineEncoder encoder;
 
 // Poles and equator.
 encoder.addPoint(-90.0, -180.0);
@@ -32,7 +36,7 @@ auto polyline = PolylineEncoder::decode("~bidP~fsia@_cidP_gsia@_cidP_gsia@");
 
 // Iterate over all points and print coordinates of each.
 for (const auto &point : polyline) {
-    printf("(%f, %f)\n", std::get<0>(point), std::get<1>(point));
+    printf("(%f, %f)\n", point.latitude(), point.longitude());
 }
 ```
 
