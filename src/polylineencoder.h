@@ -37,7 +37,18 @@
 class PolylineEncoder
 {
 public:
-    using Point = std::tuple<double, double>;
+    class Point
+    {
+    public:
+        Point(double latitude, double longitude);
+        double latitude() const;
+        double longitude() const;
+
+    private:
+        double m_latitude;
+        double m_longitude;
+    };
+
     using Polyline = std::vector<Point>;
 
     //! Adds new point with the given \p latitude and \p longitude for encoding.
