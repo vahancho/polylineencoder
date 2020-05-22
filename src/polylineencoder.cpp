@@ -35,73 +35,24 @@ static const int    s_asciiOffset = 63;
 static const int    s_5bitMask    = 0x1f; // 0b11111 = 31
 static const int    s_6bitMask    = 0x20; // 0b100000 = 32
 
-const std::vector<PolylineEncoder::Point>& PolylineEncoder::Polyline::getPoints() const
+PolylineEncoder::Point::Point(double latitude, double longitude)
+    : m_latitude(std::round(latitude * s_presision) / s_presision)
+    , m_longitude(std::round(longitude * s_presision) / s_presision)
+{}
+
+double PolylineEncoder::Point::latitude() const
 {
-    return m_points;
+    return m_latitude;
 }
 
-void PolylineEncoder::Polyline::addPoint(const Point& point)
+double PolylineEncoder::Point::longitude() const
 {
-    addPoint(std::get<0>(point), std::get<1>(point));
-}
-
-void PolylineEncoder::Polyline::addPoint(double latitude, double longitude)
-{
-    assert(latitude <= 90.0 && latitude >= -90.0);
-    assert(longitude <= 180.0 && longitude >= -180.0);
-
-    m_points.emplace_back(std::round(latitude * s_presision) / s_presision,
-                            std::round(longitude * s_presision) / s_presision);
-}
-
-void PolylineEncoder::Polyline::clear()
-{
-    m_points.clear();
-}
-
-bool PolylineEncoder::Polyline::empty() const
-{
-    return m_points.empty();
-}
-
-size_t PolylineEncoder::Polyline::size() const
-{
-    return m_points.size();
-}
-
-const PolylineEncoder::Point& PolylineEncoder::Polyline::operator[](size_t index) const
-{
-    return m_points[index];
-}
-
-const PolylineEncoder::Point& PolylineEncoder::Polyline::back() const
-{
-    return m_points.back();
-}
-
-PolylineEncoder::Polyline::iterator PolylineEncoder::Polyline::begin()
-{
-    return m_points.begin();
-}
-
-PolylineEncoder::Polyline::iterator PolylineEncoder::Polyline::end()
-{
-    return m_points.end();
-}
-
-PolylineEncoder::Polyline::const_iterator PolylineEncoder::Polyline::begin() const
-{
-    return m_points.begin();
-}
-
-PolylineEncoder::Polyline::const_iterator PolylineEncoder::Polyline::end() const
-{
-    return m_points.end();
+    return m_longitude;
 }
 
 void PolylineEncoder::addPoint(double latitude, double longitude)
 {
-    m_polyline.addPoint(latitude, longitude);
+    m_polyline.emplace_back(latitude, longitude);
 }
 
 std::string PolylineEncoder::encode() const
@@ -148,10 +99,10 @@ std::string PolylineEncoder::encode(const PolylineEncoder::Polyline &polyline)
     double latPrev = .0;
     double lonPrev = .0;
 
-    for (const auto &tuple : polyline)
+    for (const auto &point : polyline)
     {
-      const auto lat = std::get<0>(tuple);
-      const auto lon = std::get<1>(tuple);
+      const auto lat = point.latitude();
+      const auto lon = point.longitude();
 
       // Offset from the previous point
       result.append(encode(lat - latPrev));
@@ -217,10 +168,10 @@ PolylineEncoder::Polyline PolylineEncoder::decode(const std::string &coords)
 
         if (!polyline.empty()) {
             const auto &prevPoint = polyline.back();
-            lat += std::get<0>(prevPoint);
-            lon += std::get<1>(prevPoint);
+            lat += prevPoint.latitude();
+            lon += prevPoint.longitude();
         }
-        polyline.addPoint(lat, lon);
+        polyline.emplace_back(lat, lon);
     }
 
     return polyline;

@@ -24,6 +24,16 @@ SOFTWARE.
 
 #include "../src/polylineencoder.cpp"
 
+static bool operator==(const PolylineEncoder::Point& l, const PolylineEncoder::Point& r)
+{
+    return l.longitude() == r.longitude() && r.latitude() == r.latitude();
+}
+
+static bool operator!=(const PolylineEncoder::Point& l, const PolylineEncoder::Point& r)
+{
+    return !(l == r);
+}
+
 static bool test(const std::string &testName,
                  const PolylineEncoder &encoder,
                  const std::string &expected)
@@ -45,8 +55,8 @@ static bool test(const std::string &testName,
         // Compare polylines - they should be equal.
         for (size_t i = 0; i < polyline.size(); ++i)
         {
-            const auto &p1 = polyline[i];
-            const auto &p2 = decodedPolyline[i];
+            const auto &p1 = polyline.at(i);
+            const auto &p2 = decodedPolyline.at(i);
             if (p1 != p2)
             {
                 fprintf(stderr, "%s fails\n", testName.c_str());

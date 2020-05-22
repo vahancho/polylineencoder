@@ -37,33 +37,19 @@
 class PolylineEncoder
 {
 public:
-    using Point = std::tuple<double, double>;
-
-    class Polyline
+    class Point
     {
     public:
-        using iterator = std::vector<Point>::iterator;
-        using const_iterator = std::vector<Point>::const_iterator;
-
-        const std::vector<Point>& getPoints() const;
-        void addPoint(const Point& point);
-        void addPoint(double latitude, double longitude);
-
-        void clear();
-        bool empty() const;
-        size_t size() const;
-        const Point& operator[](size_t index) const;
-        const Point& back() const;
-
-        iterator begin();
-        iterator end();
-
-        const_iterator begin() const;
-        const_iterator end() const;
+        Point(double latitude, double longitude);
+        double latitude() const;
+        double longitude() const;
 
     private:
-        std::vector<Point> m_points;
+        double m_latitude;
+        double m_longitude;
     };
+
+    using Polyline = std::vector<Point>;
 
     //! Adds new point with the given \p latitude and \p longitude for encoding.
     void addPoint(double latitude, double longitude);
