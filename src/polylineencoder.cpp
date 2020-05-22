@@ -132,7 +132,7 @@ double PolylineEncoder::decode(const std::string &coords, size_t &i)
             result |= (c & s_5bitMask) << shift;
             shift += s_chunkSize;    // (7)
         } else {
-            return NAN;
+            return std::numeric_limits<double>::quiet_NaN();
         }
     } while (c >= s_6bitMask);
 
@@ -159,7 +159,7 @@ PolylineEncoder::Polyline PolylineEncoder::decode(const std::string &coords)
             break;  // exit while
         }
 
-        double lon = NAN;
+        double lon = std::numeric_limits<double>::quiet_NaN();
         if (i < coords.size()) {
             lon = decode(coords, i);
         }
