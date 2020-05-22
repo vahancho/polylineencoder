@@ -26,7 +26,8 @@ SOFTWARE.
 
 static bool operator==(const PolylineEncoder::Point& l, const PolylineEncoder::Point& r)
 {
-    return l.longitude() == r.longitude() && r.latitude() == r.latitude();
+    return std::abs(l.longitude() - r.longitude()) < std::numeric_limits<double>::epsilon()
+        && std::abs(l.latitude() - r.latitude()) < std::numeric_limits<double>::epsilon();
 }
 
 static bool operator!=(const PolylineEncoder::Point& l, const PolylineEncoder::Point& r)

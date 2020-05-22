@@ -4,6 +4,7 @@ project(polylineencoder)
 set (CMAKE_CXX_STANDARD 11)
 
 add_library(encoder
+  src/polylineencoder.h
   src/polylineencoder.cpp
 )
 
