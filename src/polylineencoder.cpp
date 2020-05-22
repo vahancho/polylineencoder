@@ -38,7 +38,10 @@ static const int    s_6bitMask    = 0x20; // 0b100000 = 32
 PolylineEncoder::Point::Point(double latitude, double longitude)
     : m_latitude(std::round(latitude * s_presision) / s_presision)
     , m_longitude(std::round(longitude * s_presision) / s_presision)
-{}
+{
+    assert(latitude <= 90.0 && latitude >= -90.0);
+    assert(longitude <= 180.0 && longitude >= -180.0);
+}
 
 double PolylineEncoder::Point::latitude() const
 {
