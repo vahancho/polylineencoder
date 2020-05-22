@@ -22,9 +22,8 @@
 *  SOFTWARE.                                                                      *
 ***********************************************************************************/
 
-#include <tuple>
 #include <cinttypes>
-#include <assert.h>
+#include <cassert>
 #include <cmath>
 
 #include "polylineencoder.h"
@@ -34,6 +33,9 @@ static const int    s_chunkSize   = 5;
 static const int    s_asciiOffset = 63;
 static const int    s_5bitMask    = 0x1f; // 0b11111 = 31
 static const int    s_6bitMask    = 0x20; // 0b100000 = 32
+
+namespace gepaf
+{
 
 PolylineEncoder::Point::Point(double latitude, double longitude)
     : m_latitude(std::round(latitude * s_presision) / s_presision)
@@ -189,3 +191,6 @@ void PolylineEncoder::clear()
 {
     m_polyline.clear();
 }
+
+} // namespace
+

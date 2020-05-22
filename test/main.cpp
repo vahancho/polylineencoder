@@ -25,19 +25,19 @@ SOFTWARE.
 #include <limits>
 #include "../src/polylineencoder.cpp"
 
-static bool operator==(const PolylineEncoder::Point& l, const PolylineEncoder::Point& r)
+static bool operator==(const gepaf::PolylineEncoder::Point& l, const gepaf::PolylineEncoder::Point& r)
 {
     return std::abs(l.longitude() - r.longitude()) < std::numeric_limits<double>::epsilon()
         && std::abs(l.latitude() - r.latitude()) < std::numeric_limits<double>::epsilon();
 }
 
-static bool operator!=(const PolylineEncoder::Point& l, const PolylineEncoder::Point& r)
+static bool operator!=(const gepaf::PolylineEncoder::Point& l, const gepaf::PolylineEncoder::Point& r)
 {
     return !(l == r);
 }
 
 static bool test(const std::string &testName,
-                 const PolylineEncoder &encoder,
+                 const gepaf::PolylineEncoder &encoder,
                  const std::string &expected)
 {
     auto res = encoder.encode();
@@ -72,12 +72,12 @@ static bool test(const std::string &testName,
 
     fprintf(stderr, "%s fails\n", testName.c_str());
     fprintf(stderr, "\tExpected: '%s', got: '%s'\n", expected.c_str(), res.c_str());
-    return false;    
+    return false;
 }
 
 static bool test1()
 {
-    PolylineEncoder encoder;
+    gepaf::PolylineEncoder encoder;
     encoder.addPoint(.0, .0);
 
     return test(__FUNCTION__, encoder, "??");
@@ -85,7 +85,7 @@ static bool test1()
 
 static bool test2()
 {
-    PolylineEncoder encoder;
+    gepaf::PolylineEncoder encoder;
 
     // Poles and equator.
     encoder.addPoint(-90.0, -180.0);
@@ -98,7 +98,7 @@ static bool test2()
 static bool test3()
 {
     // Empty list of points.
-    PolylineEncoder encoder;
+    gepaf::PolylineEncoder encoder;
 
     return test(__FUNCTION__, encoder, std::string());
 }
@@ -106,7 +106,7 @@ static bool test3()
 static bool test4()
 {
     // Coordinates from https://developers.google.com/maps/documentation/utilities/polylinealgorithm
-    PolylineEncoder encoder;
+    gepaf::PolylineEncoder encoder;
     encoder.addPoint(38.5, -120.2);
     encoder.addPoint(40.7, -120.95);
     encoder.addPoint(43.252, -126.453);
@@ -117,11 +117,11 @@ static bool test4()
 static bool test5()
 {
     // Decode a valid polyline string.
-    auto decodedPolyline = PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mqNvxq`@");
+    auto decodedPolyline = gepaf::PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mqNvxq`@");
     if (decodedPolyline.size() == 3 &&
-        decodedPolyline[0] == PolylineEncoder::Point(38.5, -120.2) &&
-        decodedPolyline[1] == PolylineEncoder::Point(40.7, -120.95) &&
-        decodedPolyline[2] == PolylineEncoder::Point(43.252, -126.453)) {
+        decodedPolyline[0] == gepaf::PolylineEncoder::Point(38.5, -120.2) &&
+        decodedPolyline[1] == gepaf::PolylineEncoder::Point(40.7, -120.95) &&
+        decodedPolyline[2] == gepaf::PolylineEncoder::Point(43.252, -126.453)) {
         return true;
     } else {
         fprintf(stderr, "%s: fails\n", __FUNCTION__);
@@ -132,7 +132,7 @@ static bool test5()
 static bool test6()
 {
     // String too short, last byte missing makes last coordinate invalid.
-    auto decodedPolyline = PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mqNvxq`");
+    auto decodedPolyline = gepaf::PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mqNvxq`");
     if (decodedPolyline.size() == 0) {
         return true;
     } else {
@@ -144,7 +144,7 @@ static bool test6()
 static bool test7()
 {
     // String too short, last bytes missing makes last coordinate.lon missing.
-    auto decodedPolyline = PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mqN");
+    auto decodedPolyline = gepaf::PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mqN");
     if (decodedPolyline.size() == 0) {
         return true;
     } else {
@@ -156,7 +156,7 @@ static bool test7()
 static bool test8()
 {
     // String too short, last coordinate.lon missing and last coordinate.lat invalid.
-    auto decodedPolyline = PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mq");
+    auto decodedPolyline = gepaf::PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mq");
     if (decodedPolyline.size() == 0) {
         return true;
     } else {
@@ -168,7 +168,7 @@ static bool test8()
 static bool test9()
 {
     // String too short, last coordinate.lon missing and last coordinate.lat invalid.
-    auto decodedPolyline = PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mq");
+    auto decodedPolyline = gepaf::PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mq");
     if (decodedPolyline.size() == 0) {
         return true;
     } else {
@@ -180,7 +180,7 @@ static bool test9()
 static bool test10()
 {
     // Third byte changed from '~' to ' ', generating an invalid fourth coordinate.
-    auto decodedPolyline = PolylineEncoder::decode("_p iF~ps|U_ulLnnqC_mqNvxq`@");
+    auto decodedPolyline = gepaf::PolylineEncoder::decode("_p iF~ps|U_ulLnnqC_mqNvxq`@");
     if (decodedPolyline.size() == 0) {
         return true;
     } else {
@@ -193,7 +193,7 @@ static bool test11()
 {
     // Fifth byte changed from 'F' to 'f' changing the 'next byte' flag in it,
     // leading to an extremely large latitude for the first coordinate.
-    auto decodedPolyline = PolylineEncoder::decode("_p~if~ps|U_ulLnnqC_mqNvxq`@");
+    auto decodedPolyline = gepaf::PolylineEncoder::decode("_p~if~ps|U_ulLnnqC_mqNvxq`@");
     if (decodedPolyline.size() == 0) {
         return true;
     } else {
@@ -206,7 +206,7 @@ static bool test12()
 {
     // Tenth byte changed from 'U' to 'u' changing the 'next byte' flag in it,
     // leading to an extremely large longitude for the first coordinate.
-    auto decodedPolyline = PolylineEncoder::decode("_p~iF~ps|u_ulLnnqC_mqNvxq`@");
+    auto decodedPolyline = gepaf::PolylineEncoder::decode("_p~iF~ps|u_ulLnnqC_mqNvxq`@");
     if (decodedPolyline.size() == 0) {
         return true;
     } else {
@@ -218,7 +218,7 @@ static bool test12()
 static bool test13()
 {
     // Empty string.
-    auto decodedPolyline = PolylineEncoder::decode("");
+    auto decodedPolyline = gepaf::PolylineEncoder::decode("");
     if (decodedPolyline.size() == 0) {
         return true;
     } else {
@@ -230,7 +230,7 @@ static bool test13()
 static bool test14()
 {
     // Avoid cumulated error
-    PolylineEncoder encoder;
+    gepaf::PolylineEncoder encoder;
     encoder.addPoint(0.0000005, 0.0000005);
     encoder.addPoint(0.0000000, 0.0000000);
 
@@ -247,7 +247,7 @@ static bool test14()
 static bool test15()
 {
     // Avoid cumulated error
-    PolylineEncoder encoder;
+    gepaf::PolylineEncoder encoder;
     encoder.addPoint(47.231174468994141, 16.62629508972168);
     encoder.addPoint(47.231208801269531, 16.626440048217773);
 

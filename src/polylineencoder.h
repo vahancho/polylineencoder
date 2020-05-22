@@ -28,6 +28,9 @@
 #include <string>
 #include <vector>
 
+namespace gepaf
+{
+
 //! Implements Google's Encoded Polyline Algorithm Format
 /*!
     For more details refer to the algorithm definition at
@@ -101,5 +104,7 @@ private:
     //! Store the polyline - the list of points.
     Polyline m_polyline;
 };
+
+} // namespace
 
 #endif // POLYLINEENCODER_H
