@@ -27,31 +27,50 @@
 
 #include <string>
 #include <vector>
-#include <tuple>
 
-//! Implements Google's polyline compression algorithm.
+//! Implements Google's Encoded Polyline Algorithm Format
 /*!
-  For more details refer to the algorithm definition at
-  https://developers.google.com/maps/documentation/utilities/polylinealgorithm
+    For more details refer to the algorithm definition at
+    https://developers.google.com/maps/documentation/utilities/polylinealgorithm
+
+    The implementation guarantees to conform with the results of the Google Interactive
+    Polyline Encoder Utility (https://developers.google.com/maps/documentation/utilities/polylineutility)
 */
 class PolylineEncoder
 {
 public:
+    /// A geodetic point.
     class Point
     {
     public:
+        /// Creates a geodetic point with the given coordinates.
+        /*!
+            Both latitude and longitude will be rounded to a reasonable precision
+            of 5 decimal places.
+            \param latitude  The latitude in decimal point degrees. The values are bounded by ±90.0°.
+            \param longitude The longitude in decimal point degrees. The values are bounded by ±180.0°.
+        */
         Point(double latitude, double longitude);
+
+        /// Returns the latitude.
         double latitude() const;
+
+        /// Returns the longitude.
         double longitude() const;
 
     private:
-        double m_latitude;
-        double m_longitude;
+        double m_latitude { 0.0 };
+        double m_longitude{ 0.0 };
     };
 
+    /// The container of geodetic points to be encoded.
     using Polyline = std::vector<Point>;
 
     //! Adds new point with the given \p latitude and \p longitude for encoding.
+    /*!
+        Note: both latitude and longitude will be rounded to a reasonable precision
+        of 5 decimal places.
+    */
     void addPoint(double latitude, double longitude);
 
     //! Encode the polyline according to the defined compression algorithm.
