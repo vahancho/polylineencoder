@@ -1,7 +1,6 @@
 # Polyline Encoder/Decoder
-C++ implementation of [Google Encoded Polyline Algorithm Format](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)
-
-The implementation guarantees to conform with the results of the [Google Interactive Polyline Encoder Utility](https://developers.google.com/maps/documentation/utilities/polylineutility)
+C++ implementation of [Google Encoded Polyline Algorithm Format.](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)<br>
+The implementation guarantees to conform with the results of the [Google Interactive Polyline Encoder Utility.](https://developers.google.com/maps/documentation/utilities/polylineutility)
 
 [![Build Status](https://travis-ci.org/vahancho/polylineencoder.svg?branch=master)](https://travis-ci.org/vahancho/polylineencoder)
 [![Build status](https://ci.appveyor.com/api/projects/status/6tg1kkp5fgk3x2fd?svg=true)](https://ci.appveyor.com/project/vahancho/polylineencoder)
@@ -32,7 +31,7 @@ auto res = encoder.encode(); // "~bidP~fsia@_cidP_gsia@_cidP_gsia@"
 encoder.clear(); // Clear the list of points.
 
 // Decode a string using static function.
-auto polyline = PolylineEncoder::decode("~bidP~fsia@_cidP_gsia@_cidP_gsia@");
+auto polyline = gepaf::PolylineEncoder::decode("~bidP~fsia@_cidP_gsia@_cidP_gsia@");
 
 // Iterate over all points and print coordinates of each.
 for (const auto &point : polyline) {
