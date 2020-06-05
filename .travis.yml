@@ -9,4 +9,5 @@ script:
     - g++ -std=c++11 -coverage test/main.cpp -o test_app
     - ./test_app
 after_success:
+  - bash <(curl -s https://codecov.io/bash) -v
   - coveralls --verbose --exclude test
