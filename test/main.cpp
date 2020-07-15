@@ -66,8 +66,14 @@ TEST(General, StandardExample)
     encoder.addPoint(38.5, -120.2);
     encoder.addPoint(40.7, -120.95);
     encoder.addPoint(43.252, -126.453);
-
     EXPECT_EQ(encoder.encode(), "_p~iF~ps|U_ulLnnqC_mqNvxq`@");
+
+    const auto &polyline = encoder.polyline();
+    // Expect three points.
+    EXPECT_EQ(polyline.size(), 3);
+
+    encoder.clear();
+    EXPECT_EQ(polyline.size(), 0);
 }
 
 TEST(General, BasicDecode)
