@@ -12,7 +12,7 @@ No installation required. Just compile *polylineencoder.h(.cpp)* in your project
 
 ## Prerequisites
 
-No special requirements except *C++11* compliant compiler. The class is tested with *gcc 4.8.4* and *MSVC 12.0* (Visual Studio 2013).
+No special requirements except *C++11* compliant compiler. The class is tested with *gcc 4.8.4* and *MSVC 12.0* (Visual Studio 2013). In order to build and run unit tests for this project you are required to have Google Test library installed on the system.
 For more details see the CI badges (*Travis CI & AppVeyor CI*).
 
 ## Usage Example:
@@ -39,11 +39,10 @@ for (const auto &point : polyline) {
 }
 ```
 
-## Test
+## Building and Testing
 
 There are unit tests provided for `PolylineEncoder` class. You can find them in the *test/* directory.
-To run them you have to build and run the test application. For doing that you must invoke the following
-commands from the terminal, assuming that compiler and environment are already configured:
+To run them you have to build and run the test application (linking with Google Test library is required). For doing that you can invoke the following commands from the terminal, assuming that compiler and environment are already configured:
 
 ##### Linux (gcc)
 ```
@@ -52,11 +51,29 @@ g++ -std=c++11 main.cpp -o test
 ./test
 ```
 
+or with CMake
+
+```
+cd test
+cmake ..
+make
+./poly_test
+```
+
 ##### Windows
 ```
 cd test
 cl /W4 /EHsc main.cpp /link /out:test.exe
 test
+```
+
+or with CMake
+
+```
+cd test
+cmake .. -G "NMake Makefiles"
+nmake
+poly_test
 ```
 
 ## See Also
