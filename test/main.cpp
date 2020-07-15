@@ -22,68 +22,25 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <limits>
 #include "polylineencoder.cpp"
+
+#include <gtest/gtest.h>
 
 static bool operator==(const gepaf::PolylineEncoder::Point& l, const gepaf::PolylineEncoder::Point& r)
 {
-    return std::abs(l.longitude() - r.longitude()) < std::numeric_limits<double>::epsilon()
-        && std::abs(l.latitude() - r.latitude()) < std::numeric_limits<double>::epsilon();
+    EXPECT_DOUBLE_EQ(l.longitude(), r.longitude());
+    EXPECT_DOUBLE_EQ(l.latitude(), r.latitude());
+    return true;
 }
 
-static bool operator!=(const gepaf::PolylineEncoder::Point& l, const gepaf::PolylineEncoder::Point& r)
-{
-    return !(l == r);
-}
-
-static bool test(const std::string &testName,
-                 const gepaf::PolylineEncoder &encoder,
-                 const std::string &expected)
-{
-    auto res = encoder.encode();
-    if (res == expected) {
-        // Decode back.
-        auto decodedPolyline = encoder.decode(res);
-        const auto &polyline = encoder.polyline();
-        if (decodedPolyline.size() != polyline.size())
-        {
-            fprintf(stderr, "%s fails\n", testName.c_str());
-            fprintf(stderr, "\tDecode error: incorrect number of points: '%d' instead of '%d'\n",
-                    static_cast<int>(decodedPolyline.size()),
-                    static_cast<int>(polyline.size()));
-            return false;
-        }
-
-        // Compare polylines - they should be equal.
-        for (size_t i = 0; i < polyline.size(); ++i)
-        {
-            const auto &p1 = polyline.at(i);
-            const auto &p2 = decodedPolyline.at(i);
-            if (p1 != p2)
-            {
-                fprintf(stderr, "%s fails\n", testName.c_str());
-                fprintf(stderr, "\tDecode error: decoded points are different\n");
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    fprintf(stderr, "%s fails\n", testName.c_str());
-    fprintf(stderr, "\tExpected: '%s', got: '%s'\n", expected.c_str(), res.c_str());
-    return false;
-}
-
-static bool test1()
+TEST(General, ZeroPoint)
 {
     gepaf::PolylineEncoder encoder;
     encoder.addPoint(.0, .0);
-
-    return test(__FUNCTION__, encoder, "??");
+    EXPECT_EQ(encoder.encode(), "??");
 }
 
-static bool test2()
+TEST(General, PolesAndEquator)
 {
     gepaf::PolylineEncoder encoder;
 
@@ -91,19 +48,18 @@ static bool test2()
     encoder.addPoint(-90.0, -180.0);
     encoder.addPoint(.0, .0);
     encoder.addPoint(90.0, 180.0);
-
-    return test(__FUNCTION__, encoder, "~bidP~fsia@_cidP_gsia@_cidP_gsia@");
+    EXPECT_EQ(encoder.encode(), "~bidP~fsia@_cidP_gsia@_cidP_gsia@");
 }
 
-static bool test3()
+TEST(General, EmptyList)
 {
     // Empty list of points.
     gepaf::PolylineEncoder encoder;
 
-    return test(__FUNCTION__, encoder, std::string());
+    EXPECT_EQ(encoder.encode(), std::string());
 }
 
-static bool test4()
+TEST(General, StandardExample)
 {
     // Coordinates from https://developers.google.com/maps/documentation/utilities/polylinealgorithm
     gepaf::PolylineEncoder encoder;
@@ -111,176 +67,97 @@ static bool test4()
     encoder.addPoint(40.7, -120.95);
     encoder.addPoint(43.252, -126.453);
 
-    return test(__FUNCTION__, encoder, "_p~iF~ps|U_ulLnnqC_mqNvxq`@");
+    EXPECT_EQ(encoder.encode(), "_p~iF~ps|U_ulLnnqC_mqNvxq`@");
 }
 
-static bool test5()
+TEST(General, BasicDecode)
 {
     // Decode a valid polyline string.
     auto decodedPolyline = gepaf::PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mqNvxq`@");
-    if (decodedPolyline.size() == 3 &&
-        decodedPolyline[0] == gepaf::PolylineEncoder::Point(38.5, -120.2) &&
-        decodedPolyline[1] == gepaf::PolylineEncoder::Point(40.7, -120.95) &&
-        decodedPolyline[2] == gepaf::PolylineEncoder::Point(43.252, -126.453)) {
-        return true;
-    } else {
-        fprintf(stderr, "%s: fails\n", __FUNCTION__);
-        return false;
-    }
+    EXPECT_EQ(decodedPolyline.size(), 3);
+    EXPECT_TRUE(decodedPolyline[0] == gepaf::PolylineEncoder::Point(38.5, -120.2));
+    EXPECT_TRUE(decodedPolyline[1] == gepaf::PolylineEncoder::Point(40.7, -120.95));
+    EXPECT_TRUE(decodedPolyline[2] == gepaf::PolylineEncoder::Point(43.252, -126.453));
+
+    decodedPolyline.clear();
+    EXPECT_EQ(decodedPolyline.size(), 0);
 }
 
-static bool test6()
+TEST(General, InvalidInputString1)
 {
     // String too short, last byte missing makes last coordinate invalid.
     auto decodedPolyline = gepaf::PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mqNvxq`");
-    if (decodedPolyline.size() == 0) {
-        return true;
-    } else {
-        fprintf(stderr, "%s: fails\n", __FUNCTION__);
-        return false;
-    }
+    EXPECT_EQ(decodedPolyline.size(), 0);
 }
 
-static bool test7()
+TEST(General, InvalidInputString2)
 {
     // String too short, last bytes missing makes last coordinate.lon missing.
     auto decodedPolyline = gepaf::PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mqN");
-    if (decodedPolyline.size() == 0) {
-        return true;
-    } else {
-        fprintf(stderr, "%s: fails\n", __FUNCTION__);
-        return false;
-    }
+    EXPECT_EQ(decodedPolyline.size(), 0);
 }
 
-static bool test8()
+TEST(General, InvalidInputString3)
 {
     // String too short, last coordinate.lon missing and last coordinate.lat invalid.
     auto decodedPolyline = gepaf::PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mq");
-    if (decodedPolyline.size() == 0) {
-        return true;
-    } else {
-        fprintf(stderr, "%s: fails\n", __FUNCTION__);
-        return false;
-    }
+    EXPECT_EQ(decodedPolyline.size(), 0);
 }
 
-static bool test9()
-{
-    // String too short, last coordinate.lon missing and last coordinate.lat invalid.
-    auto decodedPolyline = gepaf::PolylineEncoder::decode("_p~iF~ps|U_ulLnnqC_mq");
-    if (decodedPolyline.size() == 0) {
-        return true;
-    } else {
-        fprintf(stderr, "%s: fails\n", __FUNCTION__);
-        return false;
-    }
-}
-
-static bool test10()
+TEST(General, InvalidInputString4)
 {
     // Third byte changed from '~' to ' ', generating an invalid fourth coordinate.
     auto decodedPolyline = gepaf::PolylineEncoder::decode("_p iF~ps|U_ulLnnqC_mqNvxq`@");
-    if (decodedPolyline.size() == 0) {
-        return true;
-    } else {
-        fprintf(stderr, "%s: fails\n", __FUNCTION__);
-        return false;
-    }
+    EXPECT_EQ(decodedPolyline.size(), 0);
 }
 
-static bool test11()
+TEST(General, InvalidInputString5)
 {
     // Fifth byte changed from 'F' to 'f' changing the 'next byte' flag in it,
     // leading to an extremely large latitude for the first coordinate.
     auto decodedPolyline = gepaf::PolylineEncoder::decode("_p~if~ps|U_ulLnnqC_mqNvxq`@");
-    if (decodedPolyline.size() == 0) {
-        return true;
-    } else {
-        fprintf(stderr, "%s: fails\n", __FUNCTION__);
-        return false;
-    }
+    EXPECT_EQ(decodedPolyline.size(), 0);
 }
 
-static bool test12()
+TEST(General, InvalidInputString6)
 {
     // Tenth byte changed from 'U' to 'u' changing the 'next byte' flag in it,
     // leading to an extremely large longitude for the first coordinate.
     auto decodedPolyline = gepaf::PolylineEncoder::decode("_p~iF~ps|u_ulLnnqC_mqNvxq`@");
-    if (decodedPolyline.size() == 0) {
-        return true;
-    } else {
-        fprintf(stderr, "%s: fails\n", __FUNCTION__);
-        return false;
-    }
+    EXPECT_EQ(decodedPolyline.size(), 0);
 }
 
-static bool test13()
+TEST(General, DecodeEmptyString)
 {
     // Empty string.
     auto decodedPolyline = gepaf::PolylineEncoder::decode("");
-    if (decodedPolyline.size() == 0) {
-        return true;
-    } else {
-        fprintf(stderr, "%s: fails\n", __FUNCTION__);
-        return false;
-    }
+    EXPECT_EQ(decodedPolyline.size(), 0);
 }
 
-static bool test14()
+TEST(General, PrecisionTest)
 {
     // Avoid cumulated error
     gepaf::PolylineEncoder encoder;
     encoder.addPoint(0.0000005, 0.0000005);
     encoder.addPoint(0.0000000, 0.0000000);
 
-    // Intentionally not use test() function as the precision cut generates difference between encode and decode
     // Expectation comes from https://developers.google.com/maps/documentation/utilities/polylineutility
-    if (encoder.encode() == "????") {
-        return true;
-    } else {
-        fprintf(stderr, "%s: fails\n", __FUNCTION__);
-        return false;
-    }
+    EXPECT_EQ(encoder.encode(), "????");
 }
 
-static bool test15()
+TEST(General, PrecisionTest2)
 {
     // Avoid cumulated error
     gepaf::PolylineEncoder encoder;
     encoder.addPoint(47.231174468994141, 16.62629508972168);
     encoder.addPoint(47.231208801269531, 16.626440048217773);
 
-    // Intentionally not use test() function as the precision cut generates difference between encode and decode
     // Expectation comes from https://developers.google.com/maps/documentation/utilities/polylineutility
-    if (encoder.encode() == "yyg_HkindBG[") {
-        return true;
-    } else {
-        fprintf(stderr, "%s: fails\n", __FUNCTION__);
-        return false;
-    }
+    EXPECT_EQ(encoder.encode(), "yyg_HkindBG[");
 }
 
-int main(int, char**)
+int main(int argc, char** argv)
 {
-    printf("Start PolylineEncoder tests\n");
-
-    bool ok = test1();
-    ok = test2() && ok;
-    ok = test3() && ok;
-    ok = test4() && ok;
-    ok = test5() && ok;
-    ok = test6() && ok;
-    ok = test7() && ok;
-    ok = test8() && ok;
-    ok = test9() && ok;
-    ok = test10() && ok;
-    ok = test11() && ok;
-    ok = test12() && ok;
-    ok = test13() && ok;
-    ok = test14() && ok;
-    ok = test15() && ok;
-
-    printf("PolylineEncoder tests %s\n", ok ? "passed" : "failed");
-    return ok ? 0 : 1;
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

@@ -22,7 +22,9 @@ target_include_directories(poly_test PRIVATE src)
 enable_testing()
 
 find_package(GTest CONFIG REQUIRED)
-add_test(NAME Test COMMAND poly_test GTest::gtest)
+target_link_libraries(poly_test PRIVATE encoder GTest::gtest)
+
+add_test(NAME Test COMMAND poly_test)
 
 # Copy GTest libraries to the target directory.
 add_custom_command(
