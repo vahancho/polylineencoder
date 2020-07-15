@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 #include <limits>
-#include "../src/polylineencoder.cpp"
+#include "polylineencoder.cpp"
 
 static bool operator==(const gepaf::PolylineEncoder::Point& l, const gepaf::PolylineEncoder::Point& r)
 {

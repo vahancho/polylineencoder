@@ -2,13 +2,13 @@
 version: "{build}"
 
 image: Visual Studio 2013
-  
+
 # clone directory
 clone_folder: C:\projects\polylineencoder
 
 init:
     - git config --global core.autocrlf input
-  
+
 # branches to build
 branches:
     # whitelist
@@ -26,9 +26,25 @@ configuration:
 
 build_script:
     - call "c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
-    - cd C:\projects\polylineencoder\test
-    - cl /W4 /EHsc main.cpp /link /out:test.exe
+    - cd %APPVEYOR_BUILD_FOLDER%
+    - mkdir build
+    - cd build
+
+    # Build the GTest
+    - git clone --branch release-1.10.0 https://github.com/google/googletest.git
+    - cd googletest
+    - mkdir build && cd build
+    - cmake .. -DBUILD_SHARED_LIBS=ON -DINSTALL_GTEST=ON -DCMAKE_INSTALL_PREFIX:PATH=. -G "NMake Makefiles"
+    - nmake
+    - nmake install
+
+    # Configure CMake to find the GTest.
+    - set CMAKE_PREFIX_PATH=%APPVEYOR_BUILD_FOLDER%\build\googletest\build
+
+    - cd %APPVEYOR_BUILD_FOLDER%\build
+    - cmake .. -G "NMake Makefiles"
+    - nmake
 
 test_script:
-    - cd C:\projects\polylineencoder\test
-    - test.exe
+    - cd %APPVEYOR_BUILD_FOLDER%\build
+    - poly_test
