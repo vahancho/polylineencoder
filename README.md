@@ -8,7 +8,7 @@ The implementation guarantees to conform with the results of the [Google Interac
 
 ## Installation
 
-No installation required. Just compile *polylineencoder.h(.cpp)* in your project and use `gepaf::PolylineEncoder` class.
+No installation required. Just compile *polylineencoder.h(.cpp)* in your project and use `gepaf::PolylineEncoder` class template.
 
 ## Prerequisites
 
@@ -20,7 +20,10 @@ For more details see the CI badges (*Travis CI & AppVeyor CI*).
 All code is in `gepaf` namespace. `gepaf` stands for *Google Encoded Polyline Algorithm Format*.
 
 ```cpp
-gepaf::PolylineEncoder encoder;
+// Create an encoder with precision of 5 decimal places (default)
+// In order to create objects with other precision use template parameter
+// like: gepaf::PolylineEncoder<6>
+gepaf::PolylineEncoder<> encoder;
 
 // Poles and equator.
 encoder.addPoint(-90.0, -180.0);
@@ -31,7 +34,7 @@ auto res = encoder.encode(); // "~bidP~fsia@_cidP_gsia@_cidP_gsia@"
 encoder.clear(); // Clear the list of points.
 
 // Decode a string using static function.
-auto polyline = gepaf::PolylineEncoder::decode("~bidP~fsia@_cidP_gsia@_cidP_gsia@");
+auto polyline = gepaf::PolylineEncoder<>::decode("~bidP~fsia@_cidP_gsia@_cidP_gsia@");
 
 // Iterate over all points and print coordinates of each.
 for (const auto &point : polyline) {
@@ -41,7 +44,7 @@ for (const auto &point : polyline) {
 
 ## Building and Testing
 
-There are unit tests provided for `PolylineEncoder` class. You can find them in the *test/* directory.
+There are unit tests provided for `PolylineEncoder` class template. You can find them in the *test/* directory.
 To run them you have to build and run the test application (linking with Google Test library is required). For doing that you can invoke the following commands from the terminal, assuming that compiler and environment are already configured:
 
 ##### Linux (gcc)
