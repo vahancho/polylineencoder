@@ -36,9 +36,11 @@ namespace gepaf
     For more details refer to the algorithm definition at
     https://developers.google.com/maps/documentation/utilities/polylinealgorithm
 
-    The implementation guarantees to conform with the results of the Google Interactive
-    Polyline Encoder Utility (https://developers.google.com/maps/documentation/utilities/polylineutility)
+    Default implementation (precision of 5 decimal places) guarantees to conform
+    with the results of the Google Interactive Polyline Encoder Utility
+    (https://developers.google.com/maps/documentation/utilities/polylineutility)
 */
+template<int Digits = 5>
 class PolylineEncoder
 {
 public:
@@ -49,9 +51,9 @@ public:
         /// Creates a geodetic point with the given coordinates.
         /*!
             Both latitude and longitude will be rounded to a reasonable precision
-            of 5 decimal places.
-            \param latitude  The latitude in decimal point degrees. The values are bounded by �90.0�.
-            \param longitude The longitude in decimal point degrees. The values are bounded by �180.0�.
+            of 5 decimal places (default) or to the number of digits specified by the template parameter..
+            \param latitude  The latitude in decimal point degrees. The values are bounded by ±90.0°.
+            \param longitude The longitude in decimal point degrees. The values are bounded by ±180.0°.
         */
         Point(double latitude, double longitude);
 
@@ -72,7 +74,10 @@ public:
     //! Adds new point with the given \p latitude and \p longitude for encoding.
     /*!
         Note: both latitude and longitude will be rounded to a reasonable precision
-        of 5 decimal places.
+        of 5 decimal places (default) or to the number of digits specified by the
+        template parameter.
+        \param latitude  The latitude in decimal point degrees. The values are bounded by ±90.0°.
+        \param longitude The longitude in decimal point degrees. The values are bounded by ±180.0°.
     */
     void addPoint(double latitude, double longitude);
 
@@ -94,6 +99,11 @@ public:
     //! Returns polyline decoded from the given \p coordinates string.
     static Polyline decode(const std::string &coordinates);
 
+    enum Precision
+    {
+        Value = PolylineEncoder<Digits - 1>::Precision::Value * 10
+    };
+
 private:
     //! Encodes a single value according to the compression algorithm.
     static std::string encode(double value);
@@ -103,6 +113,17 @@ private:
 
     //! Store the polyline - the list of points.
     Polyline m_polyline;
+};
+
+// A bogus class for compile-time precision calculations.
+template<>
+class PolylineEncoder<0>
+{
+public:
+    enum Precision
+    {
+        Value = 1 // 10^0 = 1
+    };
 };
 
 } // namespace

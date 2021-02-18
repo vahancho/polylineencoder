@@ -29,7 +29,6 @@
 
 #include "polylineencoder.h"
 
-static const double s_presision   = 100000.0;
 static const int    s_chunkSize   = 5;
 static const int    s_asciiOffset = 63;
 static const int    s_5bitMask    = 0x1f; // 0b11111 = 31
@@ -38,37 +37,44 @@ static const int    s_6bitMask    = 0x20; // 0b100000 = 32
 namespace gepaf
 {
 
-PolylineEncoder::Point::Point(double latitude, double longitude)
-    : m_latitude(std::round(latitude * s_presision) / s_presision)
-    , m_longitude(std::round(longitude * s_presision) / s_presision)
+template<int Digits>
+PolylineEncoder<Digits>::Point::Point(double latitude, double longitude)
+    : m_latitude (std::round(latitude  * Precision::Value) / Precision::Value)
+    , m_longitude(std::round(longitude * Precision::Value) / Precision::Value)
 {
     assert(latitude <= 90.0 && latitude >= -90.0);
     assert(longitude <= 180.0 && longitude >= -180.0);
 }
 
-double PolylineEncoder::Point::latitude() const
+template<int Digits>
+double PolylineEncoder<Digits>::Point::latitude() const
 {
     return m_latitude;
 }
 
-double PolylineEncoder::Point::longitude() const
+template<int Digits>
+double PolylineEncoder<Digits>::Point::longitude() const
 {
     return m_longitude;
 }
 
-void PolylineEncoder::addPoint(double latitude, double longitude)
+template<int Digits>
+void PolylineEncoder<Digits>::addPoint(double latitude, double longitude)
 {
     m_polyline.emplace_back(latitude, longitude);
 }
 
-std::string PolylineEncoder::encode() const
+template<int Digits>
+std::string PolylineEncoder<Digits>::encode() const
 {
     return encode(m_polyline);
 }
 
-std::string PolylineEncoder::encode(double value)
+template<int Digits>
+std::string PolylineEncoder<Digits>::encode(double value)
 {
-    int32_t e5 = std::round(value * s_presision); // (2)
+    int32_t e5 =
+            std::round(value * Precision::Value); // (2)
 
     e5 <<= 1;                                     // (4)
 
@@ -97,7 +103,8 @@ std::string PolylineEncoder::encode(double value)
     return result;
 }
 
-std::string PolylineEncoder::encode(const PolylineEncoder::Polyline &polyline)
+template<int Digits>
+std::string PolylineEncoder<Digits>::encode(const PolylineEncoder::Polyline &polyline)
 {
     std::string result;
 
@@ -121,7 +128,8 @@ std::string PolylineEncoder::encode(const PolylineEncoder::Polyline &polyline)
     return result;
 }
 
-double PolylineEncoder::decode(const std::string &coords, size_t &i)
+template<int Digits>
+double PolylineEncoder<Digits>::decode(const std::string &coords, size_t &i)
 {
     assert(i < coords.size());
 
@@ -144,13 +152,14 @@ double PolylineEncoder::decode(const std::string &coords, size_t &i)
     }
     result >>= 1;                // (4)
 
-    // Convert to decimal value.
-    return result / s_presision; // (2)
+    // Convert to decimal value with the given precision.
+    return result / static_cast<double>(Precision::Value); // (2)
 }
 
-PolylineEncoder::Polyline PolylineEncoder::decode(const std::string &coords)
+template<int Digits>
+typename PolylineEncoder<Digits>::Polyline PolylineEncoder<Digits>::decode(const std::string &coords)
 {
-    PolylineEncoder::Polyline polyline;
+    PolylineEncoder<Digits>::Polyline polyline;
 
     size_t i = 0;
     while (i < coords.size())
@@ -183,12 +192,14 @@ PolylineEncoder::Polyline PolylineEncoder::decode(const std::string &coords)
     return polyline;
 }
 
-const PolylineEncoder::Polyline &PolylineEncoder::polyline() const
+template<int Digits>
+const typename PolylineEncoder<Digits>::Polyline &PolylineEncoder<Digits>::polyline() const
 {
     return m_polyline;
 }
 
-void PolylineEncoder::clear()
+template<int Digits>
+void PolylineEncoder<Digits>::clear()
 {
     m_polyline.clear();
 }
