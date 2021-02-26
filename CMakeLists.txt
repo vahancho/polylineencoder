@@ -3,17 +3,9 @@ cmake_minimum_required(VERSION 3.9)
 project(polylineencoder)
 set (CMAKE_CXX_STANDARD 11)
 
-add_library(encoder
-  src/polylineencoder.h
-  src/polylineencoder.cpp
-)
-
 add_executable(poly_test
   test/main.cpp
-)
-
-target_link_libraries(poly_test
-  PRIVATE encoder
+  src/polylineencoder.h
 )
 
 # Includes
@@ -22,7 +14,7 @@ target_include_directories(poly_test PRIVATE src)
 enable_testing()
 
 find_package(GTest CONFIG REQUIRED)
-target_link_libraries(poly_test PRIVATE encoder GTest::gtest)
+target_link_libraries(poly_test PRIVATE GTest::gtest)
 
 add_test(NAME Test COMMAND poly_test)
 
@@ -38,14 +30,14 @@ add_custom_command(
 option(CODE_COVERAGE "Enable coverage reporting" ON)
 if (CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   # Add required flags (GCC & LLVM/Clang)
-  target_compile_options(encoder INTERFACE
+  target_compile_options(poly_test INTERFACE
     -O0        # no optimization
     -g         # generate debug info
     --coverage # sets all required flags
   )
   if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
-    target_link_options(encoder INTERFACE --coverage)
+    target_link_options(poly_test INTERFACE --coverage)
   else()
-    target_link_libraries(encoder INTERFACE --coverage)
+    target_link_libraries(poly_test INTERFACE --coverage)
   endif()
 endif()
