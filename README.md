@@ -8,7 +8,7 @@ The implementation guarantees to conform with the results of the [Google Interac
 
 ## Installation
 
-No installation required. Just compile *polylineencoder.h(.cpp)* in your project and use `gepaf::PolylineEncoder` class template.
+As `Polylineencoder` is a single header library no installation required. Just include *polylineencoder.h* in your project and instantiate `gepaf::PolylineEncoder` class template.
 
 ## Prerequisites
 
@@ -20,6 +20,8 @@ For more details see the CI badges (*Travis CI & AppVeyor CI*).
 All code is in `gepaf` namespace. `gepaf` stands for *Google Encoded Polyline Algorithm Format*.
 
 ```cpp
+#include <polylineencoder.h>
+
 // Create an encoder with precision of 5 decimal places (default)
 // In order to create objects with other precision use template parameter
 // like: gepaf::PolylineEncoder<6>
@@ -50,7 +52,7 @@ To run them you have to build and run the test application (linking with Google 
 ##### Linux (gcc)
 ```
 cd test
-g++ -std=c++11 main.cpp -o test
+g++ -std=c++11 -I..\src main.cpp -o test
 ./test
 ```
 
@@ -66,7 +68,7 @@ make
 ##### Windows
 ```
 cd test
-cl /W4 /EHsc main.cpp /link /out:test.exe
+cl /W4 /EHsc /I..\src main.cpp /link /out:test.exe
 test
 ```
 
