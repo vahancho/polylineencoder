@@ -26,21 +26,18 @@ add_custom_command(
         $<TARGET_FILE_DIR:poly_test>
 )
 
-# Code Coverage Configuration
-add_library(coverage_config INTERFACE)
-
 # Coverage support.
 option(CODE_COVERAGE "Enable coverage reporting" ON)
 if (CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   # Add required flags (GCC & LLVM/Clang)
-  target_compile_options(coverage_config INTERFACE
+  target_compile_options(poly_test PUBLIC
     -O0        # no optimization
     -g         # generate debug info
     --coverage # sets all required flags
   )
   if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
-    target_link_options(coverage_config INTERFACE --coverage)
+    target_link_options(poly_test PUBLIC --coverage)
   else()
-    target_link_libraries(coverage_config INTERFACE --coverage)
+    target_link_libraries(poly_test PUBLIC --coverage)
   endif()
 endif()
