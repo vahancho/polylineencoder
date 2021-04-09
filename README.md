@@ -2,6 +2,7 @@
 C++ implementation of [Google Encoded Polyline Algorithm Format.](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)<br>
 The implementation guarantees to conform with the results of the [Google Interactive Polyline Encoder Utility.](https://developers.google.com/maps/documentation/utilities/polylineutility)
 
+[![Latest release](https://img.shields.io/github/v/release/vahancho/polylineencoder?include_prereleases)](https://github.com/vahancho/polylineencoder/releases)
 [![Build Status](https://travis-ci.org/vahancho/polylineencoder.svg?branch=master)](https://travis-ci.org/vahancho/polylineencoder)
 [![Build status](https://ci.appveyor.com/api/projects/status/6tg1kkp5fgk3x2fd?svg=true)](https://ci.appveyor.com/project/vahancho/polylineencoder)
 [![codecov](https://codecov.io/gh/vahancho/polylineencoder/branch/master/graph/badge.svg)](https://codecov.io/gh/vahancho/polylineencoder)
