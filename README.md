@@ -1,4 +1,4 @@
-# Polyline Encoder/Decoder
+# A C++ header-only Polyline Encoder/Decoder
 C++ implementation of [Google Encoded Polyline Algorithm Format.](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)<br>
 The implementation guarantees to conform with the results of the [Google Interactive Polyline Encoder Utility.](https://developers.google.com/maps/documentation/utilities/polylineutility)
 
