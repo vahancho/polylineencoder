@@ -206,7 +206,7 @@ std::string PolylineEncoder<Digits>::encode(double value)
 }
 
 template<int Digits>
-std::string PolylineEncoder<Digits>::encode(const PolylineEncoder::Polyline &polyline)
+std::string PolylineEncoder<Digits>::encode(const typename PolylineEncoder::Polyline &polyline)
 {
     std::string result;
 
