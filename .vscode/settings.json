@@ -1,0 +1,22 @@
+{
+    "cmake.configureOnOpen": false,
+    "cmake.buildDirectory" : "D:\\build\\polylineencoder",
+    "cmake.configureArgs": [
+        "-DCMAKE_PREFIX_PATH=D:\\test\\vcpkg\\installed\\x86-windows\\share\\GTest"
+    ],
+    "telemetry.enableCrashReporter": false,
+    "files.associations": {
+        "map": "cpp",
+        "unordered_map": "cpp"
+    },
+    "spellright.language": [
+        "de",
+        "en"
+    ],
+    "spellright.documentTypes": [
+        "markdown",
+        "latex",
+        "plaintext",
+        "cpp"
+    ]
+}
