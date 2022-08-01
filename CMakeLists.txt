@@ -47,3 +47,5 @@ if(BUILD_TEST)
     endif()
   endif()
 endif()
+
+install(DIRECTORY src/ DESTINATION include FILES_MATCHING PATTERN "*.h")
