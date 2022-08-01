@@ -3,41 +3,47 @@ cmake_minimum_required(VERSION 3.9)
 project(polylineencoder)
 set (CMAKE_CXX_STANDARD 11)
 
-add_executable(poly_test
-  test/main.cpp
-  src/polylineencoder.h
-)
+if(NOT DEFINED BUILD_TEST)
+  set(BUILD_TEST TRUE)
+endif()
 
-# Includes
-target_include_directories(poly_test PRIVATE src)
-
-enable_testing()
-
-find_package(GTest CONFIG REQUIRED)
-target_link_libraries(poly_test PRIVATE GTest::gtest)
-
-add_test(NAME Test COMMAND poly_test)
-
-# Copy GTest libraries to the target directory.
-add_custom_command(
-    TARGET poly_test POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:GTest::gtest>
-        $<TARGET_FILE_DIR:poly_test>
-)
-
-# Coverage support.
-option(CODE_COVERAGE "Enable coverage reporting" ON)
-if (CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-  # Add required flags (GCC & LLVM/Clang)
-  target_compile_options(poly_test PUBLIC
-    -O0        # no optimization
-    -g         # generate debug info
-    --coverage # sets all required flags
+if(BUILD_TEST)
+  add_executable(poly_test
+    test/main.cpp
+    src/polylineencoder.h
   )
-  if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
-    target_link_options(poly_test PUBLIC --coverage)
-  else()
-    target_link_libraries(poly_test PUBLIC --coverage)
+
+  # Includes
+  target_include_directories(poly_test PRIVATE src)
+
+  enable_testing()
+
+  find_package(GTest CONFIG REQUIRED)
+  target_link_libraries(poly_test PRIVATE GTest::gtest)
+
+  add_test(NAME Test COMMAND poly_test)
+
+  # Copy GTest libraries to the target directory.
+  add_custom_command(
+      TARGET poly_test POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+          $<TARGET_FILE:GTest::gtest>
+          $<TARGET_FILE_DIR:poly_test>
+  )
+
+  # Coverage support.
+  option(CODE_COVERAGE "Enable coverage reporting" ON)
+  if (CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    # Add required flags (GCC & LLVM/Clang)
+    target_compile_options(poly_test PUBLIC
+      -O0        # no optimization
+      -g         # generate debug info
+      --coverage # sets all required flags
+    )
+    if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
+      target_link_options(poly_test PUBLIC --coverage)
+    else()
+      target_link_libraries(poly_test PUBLIC --coverage)
+    endif()
   endif()
 endif()
