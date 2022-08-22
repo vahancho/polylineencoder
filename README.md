@@ -9,8 +9,29 @@ The implementation guarantees to conform with the results of the [Google Interac
 
 ## Installation
 
-As `Polylineencoder` is a single header library no installation required. Just include
+As `Polylineencoder` is a single header library no installation required in general. Just include
 *polylineencoder.h* in your project and instantiate `gepaf::PolylineEncoder` class template.
+
+### Integration with `CMake` projects
+
+However, if you use `CMake` and want to integrate the library into your project
+you might want to install it first by invoking a `CMake` command from the build directory:
+
+```
+cmake --install . --prefix=<install_path>
+```
+
+Once the library is installed you can use it from in your project by adjusting its
+`CMake` script. For example:
+
+```
+[..]
+find_package(polylineencoder REQUIRED)
+
+add_executable(example main.cpp)
+target_link_libraries(example gepaf::polylineencoder)
+[..]
+```
 
 ## Prerequisites
 
@@ -89,27 +110,6 @@ cd test
 cmake .. -G "NMake Makefiles" -DENABLE_TESTING=True
 cmake --build . --config Release
 ctest -C Release
-```
-
-## Installation and usage (CMake)
-
-In order to install the header-only library you can invoke a `CMake` command like
-from the build directory (if you build with `CMake`):
-
-```
-cmake --install . --prefix=<install_path>
-```
-
-Once the library is installed you can use it from in your project by adjusting its
-`CMake` script. For example:
-
-```
-[..]
-find_package(polylineencoder REQUIRED)
-
-add_executable(example main.cpp)
-target_link_libraries(example gepaf::polylineencoder)
-[..]
 ```
 
 ## See Also
