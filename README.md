@@ -9,11 +9,14 @@ The implementation guarantees to conform with the results of the [Google Interac
 
 ## Installation
 
-As `Polylineencoder` is a single header library no installation required. Just include *polylineencoder.h* in your project and instantiate `gepaf2::PolylineEncoder` class template.
+As `Polylineencoder` is a single header library no installation required. Just include
+*polylineencoder.h* in your project and instantiate `gepaf::PolylineEncoder` class template.
 
 ## Prerequisites
 
-No special requirements except *C++11* compliant compiler. The class is tested with *gcc 4.8.4* and *MSVC 12.0* (Visual Studio 2013). In order to build and run unit tests for this project you are required to have Google Test library installed on the system.
+No special requirements except *C++11* compliant compiler. The class is tested with
+*gcc 4.8.4* and *MSVC 12.0* (Visual Studio 2013). In order to build and run unit tests
+for this project you are required to have Google Test library installed on the system.
 For more details see the CI badges (*Travis CI & AppVeyor CI*).
 
 ## Usage Example:
@@ -52,7 +55,9 @@ For backward compatibility reason with the previous version of library the `gepa
 ## Building and Testing
 
 There are unit tests provided for `PolylineEncoder` class template. You can find them in the *test/* directory.
-To run them you have to build and run the test application (linking with Google Test library is required). For doing that you can invoke the following commands from the terminal, assuming that compiler and environment are already configured:
+To run them you have to build and run the test application (linking with Google
+Test library is required). For doing that you can invoke the following commands
+from the terminal, assuming that compiler and environment are already configured:
 
 ##### Linux (gcc)
 ```
@@ -61,13 +66,13 @@ g++ -std=c++11 -I..\src main.cpp -o test
 ./test
 ```
 
-or with CMake
+or with `CMake`
 
 ```
-cd test
-cmake ..
+mkdir build && cd build
+cmake .. -DENABLE_TESTING=True
 make
-./poly_test
+make test
 ```
 
 ##### Windows
@@ -81,9 +86,30 @@ or with CMake
 
 ```
 cd test
-cmake .. -G "NMake Makefiles"
-nmake
-poly_test
+cmake .. -G "NMake Makefiles" -DENABLE_TESTING=True
+cmake --build . --config Release
+ctest -C Release
+```
+
+## Installation and usage (CMake)
+
+In order to install the header-only library you can invoke a `CMake` command like
+from the build directory (if you build with `CMake`):
+
+```
+cmake --install . --prefix=<install_path>
+```
+
+Once the library is installed you can use it from in your project by adjusting its
+`CMake` script. For example:
+
+```
+[..]
+find_package(polylineencoder REQUIRED)
+
+add_executable(example main.cpp)
+target_link_libraries(example gepaf::polylineencoder)
+[..]
 ```
 
 ## See Also
