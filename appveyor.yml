@@ -42,9 +42,9 @@ build_script:
     - set CMAKE_PREFIX_PATH=%APPVEYOR_BUILD_FOLDER%\build\googletest\build
 
     - cd %APPVEYOR_BUILD_FOLDER%\build
-    - cmake .. -G "NMake Makefiles"
-    - nmake
+    - cmake .. -G "NMake Makefiles" -DENABLE_TESTING=True
+    - cmake --build . --config Release
 
 test_script:
     - cd %APPVEYOR_BUILD_FOLDER%\build
-    - poly_test
+    - ctest -C Release

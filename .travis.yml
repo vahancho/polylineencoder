@@ -22,9 +22,9 @@ script:
   - sudo ldconfig
   - cd ../../
 
-  - cmake ..
+  - cmake .. -DENABLE_TESTING=True
   - make
-  - ./poly_test
+  - make test
 after_success:
   # Create lcov report
   # Capture coverage info
