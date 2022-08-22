@@ -3,7 +3,7 @@
     "cmake.buildDirectory" : "${workspaceFolder}/build",
     "cmake.configureSettings": {
         "CMAKE_TOOLCHAIN_FILE": "c:/data/projects/vcpkg/scripts/buildsystems/vcpkg.cmake",
-        "ENABLE_TESTING": "True"
+        "ENABLE_TESTING": true
     },
     "files.associations": {
         "map": "cpp",
