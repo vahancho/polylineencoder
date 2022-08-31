@@ -20,7 +20,7 @@ add_custom_command(
 option(CODE_COVERAGE "Enable coverage reporting" ON)
 if (CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     # Add required flags (GCC & LLVM/Clang)
-    target_compile_options(poly_test PUBLIC
+    target_compile_options(polytest PUBLIC
         -O0        # no optimization
         -g         # generate debug info
         --coverage # sets all required flags
