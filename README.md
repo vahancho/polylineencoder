@@ -47,10 +47,10 @@ All code is in `gepaf` namespace. `gepaf` stands for *Google Encoded Polyline Al
 ```cpp
 #include <polylineencoder.h>
 
-// Create an encoder with precision of 5 decimal places (default)
+// Create an encoder with precision of five decimal places (default)
 // In order to create objects with other precision use template parameter
-// like: gepaf2::PolylineEncoder<6>
-gepaf2::PolylineEncoder<> encoder;
+// like: gepaf::PolylineEncoder<6>
+gepaf::PolylineEncoder<> encoder;
 
 // Poles and equator.
 encoder.addPoint(-90.0, -180.0);
@@ -61,7 +61,7 @@ auto res = encoder.encode(); // "~bidP~fsia@_cidP_gsia@_cidP_gsia@"
 encoder.clear(); // Clear the list of points.
 
 // Decode a string using static function.
-auto polyline = gepaf2::PolylineEncoder<>::decode("~bidP~fsia@_cidP_gsia@_cidP_gsia@");
+auto polyline = gepaf::PolylineEncoder<>::decode("~bidP~fsia@_cidP_gsia@_cidP_gsia@");
 
 // Iterate over all points and print coordinates of each.
 for (const auto &point : polyline) {
@@ -71,7 +71,8 @@ for (const auto &point : polyline) {
 
 ## Backward compatibility
 
-For backward compatibility reason with the previous version of library the `gepaf` namespace contains a `PolylineEncoder` class that is the very same as the `gepaf2::PolylineEncoder<5>`
+For backward compatibility reason with the previous version of library the `gepaf`
+namespace contains a `PolylineEncoder` class that is the very same as the `gepaf::PolylineEncoder<5>`
 
 ## Building and Testing
 
@@ -115,4 +116,3 @@ ctest -C Release
 ## See Also
 
 * [Encoded Polyline Algorithm](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)
-
