@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 11)
 option(ENABLE_TESTING "Enable unit test build" OFF)
 
 project(polylineencoder
-        VERSION 1.1.3
+        VERSION 2.0.0
         DESCRIPTION "A header-only c++ library that provides implementation of Google Encoded Polyline Algorithm Format."
         HOMEPAGE_URL "https://github.com/vahancho/polylineencoder")
 
