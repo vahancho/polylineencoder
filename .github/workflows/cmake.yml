@@ -15,38 +15,74 @@ jobs:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v3
 
+    # Install GTest on non Windows nodes
     - name: Install GTest
+      if: matrix.os != 'windows-latest'
       working-directory: ${{github.workspace}}
       run: |
         git clone --branch v1.12.x https://github.com/google/googletest.git
         cd googletest
-        mkdir build
-        cd build
-        cmake .. -DBUILD_SHARED_LIBS=ON -DINSTALL_GTEST=ON -DCMAKE_INSTALL_PREFIX:PATH=/usr
-        make
-        sudo make install
-        sudo ldconfig
+        cmake -B build -DBUILD_SHARED_LIBS=ON -DINSTALL_GTEST=ON -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+        cmake --build build --config ${{env.BUILD_TYPE}}
+        sudo cmake --install build --prefix=/usr/local
+
+    # Windows only
+    - name: Install GTest (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: cmd
+      working-directory: ${{github.workspace}}
+      run: |
+        call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat"
+        git clone --branch v1.12.x https://github.com/google/googletest.git
+        cd googletest
+        cmake -B build -DBUILD_SHARED_LIBS=ON -DINSTALL_GTEST=ON
+        cmake --build build --config ${{env.BUILD_TYPE}}
+        cmake --install build --prefix=${{github.workspace}}/googletest/build
 
     - name: Configure CMake
+      if: matrix.os != 'windows-latest'
       working-directory: ${{github.workspace}}
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DENABLE_TESTING=True
+      run: cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DENABLE_TESTING=True
 
     - name: Build
+      if: matrix.os != 'windows-latest'
       # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: cmake --build build --config ${{env.BUILD_TYPE}}
+
+    # Windows only
+    - name: Configure CMake (Windows)
+      if: matrix.os == 'windows-latest'
+      working-directory: ${{github.workspace}}
+      shell: cmd
+      run: |
+        call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat"
+        cmake -B build -DENABLE_TESTING=True -DCMAKE_PREFIX_PATH=${{github.workspace}}\googletest\build
+
+    # Windows only
+    - name: Build (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: cmd
+      # Build your program with the given configuration
+      run: |
+        call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat"
+        cmake --build build --config ${{env.BUILD_TYPE}}
 
     - name: Test
       working-directory: ${{github.workspace}}/build
       # Execute tests defined by the CMake configuration.
-      run: ctest -C ${{env.BUILD_TYPE}}
+      run: ctest -C ${{env.BUILD_TYPE}} --verbose
 
+    # Uploade coverage report only for Linux
     - name: Upload coverage to Codecov
+      if: matrix.os == 'ubuntu-latest'
       uses: codecov/codecov-action@v3
       with:
         verbose: true
