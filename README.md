@@ -102,7 +102,7 @@ test
 or with CMake
 
 ```
-cd test
+mkdir build && cd build
 cmake .. -G "NMake Makefiles" -DENABLE_TESTING=True
 cmake --build . --config Release
 ctest -C Release
