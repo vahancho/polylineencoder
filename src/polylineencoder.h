@@ -32,7 +32,7 @@
 #include <string>
 #include <vector>
 
-namespace gepaf2
+namespace gepaf
 {
 
 //! Implements Google's Encoded Polyline Algorithm Format
@@ -306,11 +306,4 @@ void PolylineEncoder<Digits>::clear()
 
 } // namespace
 
-namespace gepaf {
-
-using PolylineEncoder = gepaf2::PolylineEncoder<5>;
-
-}
-
 #endif // POLYLINEENCODER_H
-

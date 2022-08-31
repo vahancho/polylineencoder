@@ -36,14 +36,14 @@ bool operator==(const Point &l, const Point &r)
 
 TEST(General, ZeroPoint)
 {
-    gepaf2::PolylineEncoder<> encoder;
+    gepaf::PolylineEncoder<> encoder;
     encoder.addPoint(.0, .0);
     EXPECT_EQ(encoder.encode(), "??");
 }
 
 TEST(General, PolesAndEquator)
 {
-    gepaf2::PolylineEncoder<> encoder;
+    gepaf::PolylineEncoder<> encoder;
 
     // Poles and equator.
     encoder.addPoint(-90.0, -180.0);
@@ -55,7 +55,7 @@ TEST(General, PolesAndEquator)
 TEST(General, EmptyList)
 {
     // Empty list of points.
-    gepaf2::PolylineEncoder<> encoder;
+    gepaf::PolylineEncoder<> encoder;
 
     EXPECT_EQ(encoder.encode(), std::string());
 }
@@ -63,7 +63,7 @@ TEST(General, EmptyList)
 TEST(General, StandardExample)
 {
     // Coordinates from https://developers.google.com/maps/documentation/utilities/polylinealgorithm
-    gepaf2::PolylineEncoder<> encoder;
+    gepaf::PolylineEncoder<> encoder;
     encoder.addPoint(38.5, -120.2);
     encoder.addPoint(40.7, -120.95);
     encoder.addPoint(43.252, -126.453);
@@ -80,11 +80,11 @@ TEST(General, StandardExample)
 TEST(General, BasicDecode)
 {
     // Decode a valid polyline string.
-    auto decodedPolyline = gepaf2::PolylineEncoder<>::decode("_p~iF~ps|U_ulLnnqC_mqNvxq`@");
+    auto decodedPolyline = gepaf::PolylineEncoder<>::decode("_p~iF~ps|U_ulLnnqC_mqNvxq`@");
     EXPECT_EQ(decodedPolyline.size(), 3);
-    EXPECT_TRUE(decodedPolyline[0] == gepaf2::PolylineEncoder<>::Point(38.5, -120.2));
-    EXPECT_TRUE(decodedPolyline[1] == gepaf2::PolylineEncoder<>::Point(40.7, -120.95));
-    EXPECT_TRUE(decodedPolyline[2] == gepaf2::PolylineEncoder<>::Point(43.252, -126.453));
+    EXPECT_TRUE(decodedPolyline[0] == gepaf::PolylineEncoder<>::Point(38.5, -120.2));
+    EXPECT_TRUE(decodedPolyline[1] == gepaf::PolylineEncoder<>::Point(40.7, -120.95));
+    EXPECT_TRUE(decodedPolyline[2] == gepaf::PolylineEncoder<>::Point(43.252, -126.453));
 
     decodedPolyline.clear();
     EXPECT_EQ(decodedPolyline.size(), 0);
@@ -93,70 +93,70 @@ TEST(General, BasicDecode)
 TEST(General, HighPrecision_6_digits)
 {
     {
-        auto decodedPolyline = gepaf2::PolylineEncoder<6>::decode("AA@@");
+        auto decodedPolyline = gepaf::PolylineEncoder<6>::decode("AA@@");
         EXPECT_EQ(decodedPolyline.size(), 2);
-        EXPECT_TRUE(decodedPolyline[0] == gepaf2::PolylineEncoder<6>::Point(0.0000005, 0.0000005));
-        EXPECT_TRUE(decodedPolyline[1] == gepaf2::PolylineEncoder<6>::Point(0.0, 0.0));
+        EXPECT_TRUE(decodedPolyline[0] == gepaf::PolylineEncoder<6>::Point(0.0000005, 0.0000005));
+        EXPECT_TRUE(decodedPolyline[1] == gepaf::PolylineEncoder<6>::Point(0.0, 0.0));
     }
     {
-        gepaf2::PolylineEncoder<6> encoder;
+        gepaf::PolylineEncoder<6> encoder;
         encoder.addPoint(0.0000005, 0.0000005);
         encoder.addPoint(0.0000000, 0.0000000);
         EXPECT_EQ(encoder.encode(), "AA@@");
     }
     {
-        gepaf2::PolylineEncoder<6> encoder;
+        gepaf::PolylineEncoder<6> encoder;
         encoder.addPoint(47.231174468994141, 16.62629508972168);
         encoder.addPoint(47.231208801269531, 16.626440048217773);
         EXPECT_EQ(encoder.encode(), "kkwayAmfxu^eAaH");
 
-        auto decodedPolyline = gepaf2::PolylineEncoder<6>::decode("kkwayAmfxu^eAaH");
+        auto decodedPolyline = gepaf::PolylineEncoder<6>::decode("kkwayAmfxu^eAaH");
         EXPECT_EQ(decodedPolyline.size(), 2);
-        EXPECT_TRUE(decodedPolyline[0] == gepaf2::PolylineEncoder<6>::Point(47.231174, 16.626295));
-        EXPECT_TRUE(decodedPolyline[1] == gepaf2::PolylineEncoder<6>::Point(47.231209, 16.626440));
+        EXPECT_TRUE(decodedPolyline[0] == gepaf::PolylineEncoder<6>::Point(47.231174, 16.626295));
+        EXPECT_TRUE(decodedPolyline[1] == gepaf::PolylineEncoder<6>::Point(47.231209, 16.626440));
     }
 }
 
 TEST(General, LowPrecision_1_digit)
 {
     {
-        gepaf2::PolylineEncoder<1> encoder;
+        gepaf::PolylineEncoder<1> encoder;
         encoder.addPoint(47.231174468994141, 16.54629508972168);
         encoder.addPoint(47.335208801269531, 16.65440048217773);
         EXPECT_EQ(encoder.encode(), "o\\iIAC");
 
-        auto decodedPolyline = gepaf2::PolylineEncoder<1>::decode("o\\iIAC");
+        auto decodedPolyline = gepaf::PolylineEncoder<1>::decode("o\\iIAC");
         EXPECT_EQ(decodedPolyline.size(), 2);
-        EXPECT_TRUE(decodedPolyline[0] == gepaf2::PolylineEncoder<1>::Point(47.2, 16.5));
-        EXPECT_TRUE(decodedPolyline[1] == gepaf2::PolylineEncoder<1>::Point(47.3, 16.65));
+        EXPECT_TRUE(decodedPolyline[0] == gepaf::PolylineEncoder<1>::Point(47.2, 16.5));
+        EXPECT_TRUE(decodedPolyline[1] == gepaf::PolylineEncoder<1>::Point(47.3, 16.65));
     }
 }
 
 TEST(General, InvalidInputString1)
 {
     // String too short, last byte missing makes last coordinate invalid.
-    auto decodedPolyline = gepaf2::PolylineEncoder<>::decode("_p~iF~ps|U_ulLnnqC_mqNvxq`");
+    auto decodedPolyline = gepaf::PolylineEncoder<>::decode("_p~iF~ps|U_ulLnnqC_mqNvxq`");
     EXPECT_EQ(decodedPolyline.size(), 0);
 }
 
 TEST(General, InvalidInputString2)
 {
     // String too short, last bytes missing makes last coordinate.lon missing.
-    auto decodedPolyline = gepaf2::PolylineEncoder<>::decode("_p~iF~ps|U_ulLnnqC_mqN");
+    auto decodedPolyline = gepaf::PolylineEncoder<>::decode("_p~iF~ps|U_ulLnnqC_mqN");
     EXPECT_EQ(decodedPolyline.size(), 0);
 }
 
 TEST(General, InvalidInputString3)
 {
     // String too short, last coordinate.lon missing and last coordinate.lat invalid.
-    auto decodedPolyline = gepaf2::PolylineEncoder<>::decode("_p~iF~ps|U_ulLnnqC_mq");
+    auto decodedPolyline = gepaf::PolylineEncoder<>::decode("_p~iF~ps|U_ulLnnqC_mq");
     EXPECT_EQ(decodedPolyline.size(), 0);
 }
 
 TEST(General, InvalidInputString4)
 {
     // Third byte changed from '~' to ' ', generating an invalid fourth coordinate.
-    auto decodedPolyline = gepaf2::PolylineEncoder<>::decode("_p iF~ps|U_ulLnnqC_mqNvxq`@");
+    auto decodedPolyline = gepaf::PolylineEncoder<>::decode("_p iF~ps|U_ulLnnqC_mqNvxq`@");
     EXPECT_EQ(decodedPolyline.size(), 0);
 }
 
@@ -164,7 +164,7 @@ TEST(General, InvalidInputString5)
 {
     // Fifth byte changed from 'F' to 'f' changing the 'next byte' flag in it,
     // leading to an extremely large latitude for the first coordinate.
-    auto decodedPolyline = gepaf2::PolylineEncoder<>::decode("_p~if~ps|U_ulLnnqC_mqNvxq`@");
+    auto decodedPolyline = gepaf::PolylineEncoder<>::decode("_p~if~ps|U_ulLnnqC_mqNvxq`@");
     EXPECT_EQ(decodedPolyline.size(), 0);
 }
 
@@ -172,14 +172,14 @@ TEST(General, InvalidInputString6)
 {
     // Tenth byte changed from 'U' to 'u' changing the 'next byte' flag in it,
     // leading to an extremely large longitude for the first coordinate.
-    auto decodedPolyline = gepaf2::PolylineEncoder<>::decode("_p~iF~ps|u_ulLnnqC_mqNvxq`@");
+    auto decodedPolyline = gepaf::PolylineEncoder<>::decode("_p~iF~ps|u_ulLnnqC_mqNvxq`@");
     EXPECT_EQ(decodedPolyline.size(), 0);
 }
 
 TEST(General, DecodeEmptyString)
 {
     // Empty string.
-    auto decodedPolyline = gepaf2::PolylineEncoder<>::decode("");
+    auto decodedPolyline = gepaf::PolylineEncoder<>::decode("");
     EXPECT_EQ(decodedPolyline.size(), 0);
 }
 
@@ -187,7 +187,7 @@ TEST(General, PrecisionTest)
 {
     {
         // Avoid cumulated error
-        gepaf2::PolylineEncoder<> encoder;
+        gepaf::PolylineEncoder<> encoder;
         encoder.addPoint(0.0000005, 0.0000005);
         encoder.addPoint(0.0000000, 0.0000000);
 
@@ -196,7 +196,7 @@ TEST(General, PrecisionTest)
     }
     {
         // Avoid cumulated error
-        gepaf2::PolylineEncoder<6> encoder;
+        gepaf::PolylineEncoder<6> encoder;
         encoder.addPoint(0.00000005, 0.00000005);
         encoder.addPoint(0.00000000, 0.00000000);
 
@@ -208,7 +208,7 @@ TEST(General, PrecisionTest)
 TEST(General, PrecisionTest2)
 {
     // Avoid cumulated error
-    gepaf2::PolylineEncoder<> encoder;
+    gepaf::PolylineEncoder<> encoder;
     encoder.addPoint(47.231174468994141, 16.62629508972168);
     encoder.addPoint(47.231208801269531, 16.626440048217773);
 
