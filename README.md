@@ -7,6 +7,13 @@ The implementation guarantees to conform with the results of the [Google Interac
 [![Build status](https://ci.appveyor.com/api/projects/status/6tg1kkp5fgk3x2fd?svg=true)](https://ci.appveyor.com/project/vahancho/polylineencoder)
 [![codecov](https://codecov.io/gh/vahancho/polylineencoder/branch/master/graph/badge.svg)](https://codecov.io/gh/vahancho/polylineencoder)
 
+## Prerequisites
+
+No special requirements except *C++11* compliant compiler. The class is tested with
+*gcc 4.8.4* and *MSVC 12.0* (Visual Studio 2013). In order to build and run unit tests
+for this project you are required to have Google Test library installed on the system.
+For more details see the CI badges (*Travis CI & AppVeyor CI*).
+
 ## Installation
 
 As `Polylineencoder` is a single header library no installation required in general. Just include
@@ -32,13 +39,6 @@ add_executable(example main.cpp)
 target_link_libraries(example gepaf::polylineencoder)
 [..]
 ```
-
-## Prerequisites
-
-No special requirements except *C++11* compliant compiler. The class is tested with
-*gcc 4.8.4* and *MSVC 12.0* (Visual Studio 2013). In order to build and run unit tests
-for this project you are required to have Google Test library installed on the system.
-For more details see the CI badges (*Travis CI & AppVeyor CI*).
 
 ## Usage Example:
 
