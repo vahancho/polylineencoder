@@ -45,3 +45,10 @@ jobs:
       working-directory: ${{github.workspace}}/build
       # Execute tests defined by the CMake configuration.
       run: ctest -C ${{env.BUILD_TYPE}}
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        verbose: true
+        gcov: true
+        gcov_include: ${{github.workspace}}/src/polylineencoder.h
