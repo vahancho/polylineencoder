@@ -9,7 +9,7 @@ The implementation guarantees to conform with the results of the [Google Interac
 
 ## Installation
 
-As `Polylineencoder` is a single header library no installation required. Just include *polylineencoder.h* in your project and instantiate `gepaf::PolylineEncoder` class template.
+As `Polylineencoder` is a single header library no installation required. Just include *polylineencoder.h* in your project and instantiate `gepaf2::PolylineEncoder` class template.
 
 ## Prerequisites
 
@@ -25,8 +25,8 @@ All code is in `gepaf` namespace. `gepaf` stands for *Google Encoded Polyline Al
 
 // Create an encoder with precision of 5 decimal places (default)
 // In order to create objects with other precision use template parameter
-// like: gepaf::PolylineEncoder<6>
-gepaf::PolylineEncoder<> encoder;
+// like: gepaf2::PolylineEncoder<6>
+gepaf2::PolylineEncoder<> encoder;
 
 // Poles and equator.
 encoder.addPoint(-90.0, -180.0);
@@ -37,13 +37,17 @@ auto res = encoder.encode(); // "~bidP~fsia@_cidP_gsia@_cidP_gsia@"
 encoder.clear(); // Clear the list of points.
 
 // Decode a string using static function.
-auto polyline = gepaf::PolylineEncoder<>::decode("~bidP~fsia@_cidP_gsia@_cidP_gsia@");
+auto polyline = gepaf2::PolylineEncoder<>::decode("~bidP~fsia@_cidP_gsia@_cidP_gsia@");
 
 // Iterate over all points and print coordinates of each.
 for (const auto &point : polyline) {
     printf("(%f, %f)\n", point.latitude(), point.longitude());
 }
 ```
+
+## Backward compatibility
+
+For backward compatibility reason with the previous version of library the `gepaf` namespace contains a `PolylineEncoder` class that is the very same as the `gepaf2::PolylineEncoder<5>`
 
 ## Building and Testing
 
