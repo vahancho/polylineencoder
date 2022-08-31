@@ -69,11 +69,6 @@ for (const auto &point : polyline) {
 }
 ```
 
-## Backward compatibility
-
-For backward compatibility reason with the previous version of library the `gepaf`
-namespace contains a `PolylineEncoder` class that is the very same as the `gepaf::PolylineEncoder<5>`
-
 ## Building and Testing
 
 There are unit tests provided for `PolylineEncoder` class template. You can find them in the *test/* directory.
