@@ -3,16 +3,16 @@ C++ implementation of [Google Encoded Polyline Algorithm Format.](https://develo
 The implementation guarantees to conform with the results of the [Google Interactive Polyline Encoder Utility.](https://developers.google.com/maps/documentation/utilities/polylineutility)
 
 [![Latest release](https://img.shields.io/github/v/release/vahancho/polylineencoder?include_prereleases)](https://github.com/vahancho/polylineencoder/releases)
-[![Build Status](https://travis-ci.org/vahancho/polylineencoder.svg?branch=master)](https://travis-ci.org/vahancho/polylineencoder)
+[![Build and test (CMake)](https://github.com/vahancho/polylineencoder/actions/workflows/cmake.yml/badge.svg)](https://github.com/vahancho/polylineencoder/actions/workflows/cmake.yml)
 [![Build status](https://ci.appveyor.com/api/projects/status/6tg1kkp5fgk3x2fd?svg=true)](https://ci.appveyor.com/project/vahancho/polylineencoder)
-[![codecov](https://codecov.io/gh/vahancho/polylineencoder/branch/master/graph/badge.svg)](https://codecov.io/gh/vahancho/polylineencoder)
+[![Code coverage](https://codecov.io/gh/vahancho/polylineencoder/branch/master/graph/badge.svg)](https://codecov.io/gh/vahancho/polylineencoder)
 
 ## Prerequisites
 
 No special requirements except *C++11* compliant compiler. The class is tested with
-*gcc 4.8.4* and *MSVC 12.0* (Visual Studio 2013). In order to build and run unit tests
+*gcc* and *MSVC* compilers. In order to build and run unit tests
 for this project you are required to have Google Test library installed on the system.
-For more details see the CI badges (*Travis CI & AppVeyor CI*).
+For more details see the CI badges or [GitHub Actions](https://github.com/vahancho/polylineencoder/actions).
 
 ## Installation
 
