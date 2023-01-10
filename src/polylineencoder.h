@@ -103,9 +103,9 @@ public:
     //! Returns polyline decoded from the given \p coordinates string.
     static Polyline decode(const std::string &coordinates);
 
-    enum Precision
+    struct Precision
     {
-        Value = PolylineEncoder<Digits - 1>::Precision::Value * 10
+        static constexpr int Value = PolylineEncoder<Digits - 1>::Precision::Value * 10;
     };
 
 private:
@@ -130,9 +130,9 @@ template<>
 class PolylineEncoder<0>
 {
 public:
-    enum Precision
+    struct Precision
     {
-        Value = 1 // 10^0 = 1
+        static constexpr int Value = 1; // 10^0 = 1
     };
 };
 
