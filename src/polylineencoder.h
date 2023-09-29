@@ -176,7 +176,18 @@ template<int Digits>
 std::string PolylineEncoder<Digits>::encode(double value)
 {
     int32_t e5 =
-        std::round(value * Precision::Value); // (2)
+        std::round(value * Precision::Value);     // (2)
+
+    if (e5 < 0) {
+        // Negative value must be calculated using
+        // its two's complement by inverting the
+        // binary value and adding one to the
+        // result                                 // (3)
+
+        e5 *= -1; // Starting with the equivalent positive number;
+        e5 = ~e5; // Inverting (or flipping) all bits – changing every 0 to 1, and every 1 to 0;
+        e5 += 1;  // Adding 1 to the entire inverted number.
+    }
 
     e5 <<= 1;                                     // (4)
 
