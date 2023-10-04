@@ -178,7 +178,9 @@ std::string PolylineEncoder<Digits>::encode(double value)
     int32_t e5 =
         std::round(value * Precision::Value);     // (2)
 
-    if (e5 < 0) {
+    const bool negativeValue = value < 0;
+
+    if (negativeValue) {
         // Negative value must be calculated using
         // its two's complement by inverting the
         // binary value and adding one to the
@@ -191,7 +193,7 @@ std::string PolylineEncoder<Digits>::encode(double value)
 
     e5 <<= 1;                                     // (4)
 
-    if (value < 0) {
+    if (negativeValue) {
         e5 = ~e5;                                 // (5)
     }
 
