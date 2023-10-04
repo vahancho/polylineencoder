@@ -119,10 +119,10 @@ private:
     Polyline m_polyline;
 
     //! Constants
-    static const int s_chunkSize   = 5;
-    static const int s_asciiOffset = 63;
-    static const int s_5bitMask    = 0x1f; // 0b11111 = 31
-    static const int s_6bitMask    = 0x20; // 0b100000 = 32
+    static constexpr const int s_chunkSize   = 5;
+    static constexpr const int s_asciiOffset = 63;
+    static constexpr const int s_5bitMask    = 0x1f; // 0b11111 = 31
+    static constexpr const int s_6bitMask    = 0x20; // 0b100000 = 32
 };
 
 // A bogus class for compile-time precision calculations.
