@@ -41,6 +41,13 @@ TEST(General, ZeroPoint)
     EXPECT_EQ(encoder.encode(), "??");
 }
 
+TEST(General, NegativeValues)
+{
+    gepaf::PolylineEncoder<> encoder;
+    encoder.addPoint(-77.9832104, -179.9832104);
+    EXPECT_EQ(encoder.encode(), "`b~zM`~oia@");
+}
+
 TEST(General, PolesAndEquator)
 {
     gepaf::PolylineEncoder<> encoder;

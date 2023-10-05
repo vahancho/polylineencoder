@@ -119,10 +119,10 @@ private:
     Polyline m_polyline;
 
     //! Constants
-    static const int s_chunkSize   = 5;
-    static const int s_asciiOffset = 63;
-    static const int s_5bitMask    = 0x1f; // 0b11111 = 31
-    static const int s_6bitMask    = 0x20; // 0b100000 = 32
+    static constexpr const int s_chunkSize   = 5;
+    static constexpr const int s_asciiOffset = 63;
+    static constexpr const int s_5bitMask    = 0x1f; // 0b11111 = 31
+    static constexpr const int s_6bitMask    = 0x20; // 0b100000 = 32
 };
 
 // A bogus class for compile-time precision calculations.
@@ -176,11 +176,24 @@ template<int Digits>
 std::string PolylineEncoder<Digits>::encode(double value)
 {
     int32_t e5 =
-        std::round(value * Precision::Value); // (2)
+        std::round(value * Precision::Value);     // (2)
+
+    const bool negativeValue = value < 0;
+
+    if (negativeValue) {
+        // Negative value must be calculated using
+        // its two's complement by inverting the
+        // binary value and adding one to the
+        // result                                 // (3)
+
+        e5 *= -1; // Starting with the equivalent positive number;
+        e5 = ~e5; // Inverting (or flipping) all bits – changing every 0 to 1, and every 1 to 0;
+        e5 += 1;  // Adding 1 to the entire inverted number.
+    }
 
     e5 <<= 1;                                     // (4)
 
-    if (value < 0) {
+    if (negativeValue) {
         e5 = ~e5;                                 // (5)
     }
 
