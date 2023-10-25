@@ -100,6 +100,9 @@ public:
     //! Returns the result of encoding of the given polyline.
     static std::string encode(const Polyline &polyline);
 
+    template <typename T>
+    static std::string encodeList(const T *data, size_t list_length, double T::*latitude, double T::*longitude);
+
     //! Returns polyline decoded from the given \p coordinates string.
     static Polyline decode(const std::string &coordinates);
 
@@ -230,6 +233,32 @@ std::string PolylineEncoder<Digits>::encode(const typename PolylineEncoder::Poly
     for (const auto &point : polyline) {
         const auto lat = point.latitude();
         const auto lon = point.longitude();
+
+        // Offset from the previous point
+        result.append(encode(lat - latPrev));
+        result.append(encode(lon - lonPrev));
+
+        latPrev = lat;
+        lonPrev = lon;
+    }
+
+    return result;
+}
+
+template <int Digits>
+template <typename T>
+std::string PolylineEncoder<Digits>::encodeList(const T *data, size_t list_length, double T::*latitude, double T::*longitude)
+{
+    std::string result;
+
+    double latPrev = .0;
+    double lonPrev = .0;
+
+    // for (const auto &idx : remained_index)
+    for (size_t idx =0; idx< list_length; idx++)
+    {
+        const auto lat = data[idx].*latitude;
+        const auto lon = data[idx].*longitude;
 
         // Offset from the previous point
         result.append(encode(lat - latPrev));
