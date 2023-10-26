@@ -79,7 +79,7 @@ from the terminal, assuming that compiler and environment are already configured
 ##### Linux (gcc)
 ```
 cd test
-g++ -std=c++11 -I..\src main.cpp -o test
+g++ -std=c++14 -I..\src main.cpp -o test
 ./test
 ```
 

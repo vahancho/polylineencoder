@@ -75,16 +75,15 @@ TEST(General, EncodeGenericList)
 
     gepaf::PolylineEncoder<> encoder;
 
+    // List of DummyPoint for testing purpose 
     DummyPoint dp[] = {
             DummyPoint{-90.0, -180.0},
             DummyPoint{.0, .0},
             DummyPoint{90.0, 180.0}
     };
     auto result = encoder.encodeList(dp,3, &DummyPoint::x, &DummyPoint::y);
-    printf("%s\n", result.c_str());
 
-    // Poles and equator.
-    EXPECT_EQ(result.c_str(), "~bidP~fsia@_cidP_gsia@_cidP_gsia@");
+    EXPECT_EQ(result, "~bidP~fsia@_cidP_gsia@_cidP_gsia@");
 }
 
 TEST(General, EmptyList)
