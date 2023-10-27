@@ -100,6 +100,18 @@ public:
     //! Returns the result of encoding of the given polyline.
     static std::string encode(const Polyline &polyline);
 
+    //! Returns the result of encoding of the given polyline.
+    /*!
+        This generic function accepts a range of elements [first, last) to encode.
+        \param first The first element in the range
+        \param last  The last element in the range
+        \param getLat Function that returns the element's latitude
+        \param getLon Function that return the element's longitude
+        \returns The result of encoding of the given elements.
+    */
+    template<typename RandomIt, typename GetLat, typename GetLon>
+    static std::string encode(RandomIt first, RandomIt last, GetLat && getLat, GetLon && getLon);
+
     //! Returns polyline decoded from the given \p coordinates string.
     static Polyline decode(const std::string &coordinates);
 
@@ -219,7 +231,9 @@ std::string PolylineEncoder<Digits>::encode(double value)
 }
 
 template<int Digits>
-std::string PolylineEncoder<Digits>::encode(const typename PolylineEncoder::Polyline &polyline)
+template<typename RandomIt, typename GetLat, typename GetLon>
+std::string PolylineEncoder<Digits>::encode(RandomIt first, RandomIt last,
+                                            GetLat && getLat, GetLon && getLon)
 {
     std::string result;
 
@@ -227,9 +241,11 @@ std::string PolylineEncoder<Digits>::encode(const typename PolylineEncoder::Poly
     double latPrev = .0;
     double lonPrev = .0;
 
-    for (const auto &point : polyline) {
-        const auto lat = point.latitude();
-        const auto lon = point.longitude();
+    while (first != last) {
+        auto getLatFunc = std::bind(getLat, *first);
+        const auto lat = getLatFunc();
+        auto getLonFunc = std::bind(getLon, *first);
+        const auto lon = getLonFunc();
 
         // Offset from the previous point
         result.append(encode(lat - latPrev));
@@ -237,9 +253,17 @@ std::string PolylineEncoder<Digits>::encode(const typename PolylineEncoder::Poly
 
         latPrev = lat;
         lonPrev = lon;
+
+        ++first;
     }
 
     return result;
+}
+
+template<int Digits>
+std::string PolylineEncoder<Digits>::encode(const typename PolylineEncoder::Polyline &polyline)
+{
+    return encode(polyline.cbegin(), polyline.cend(), &Point::latitude, &Point::longitude);
 }
 
 template<int Digits>

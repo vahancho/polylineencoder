@@ -59,6 +59,41 @@ TEST(General, PolesAndEquator)
     EXPECT_EQ(encoder.encode(), "~bidP~fsia@_cidP_gsia@_cidP_gsia@");
 }
 
+TEST(General, EncodeArray)
+{
+    class DummyPoint
+    {
+    public:
+        DummyPoint(double t_x, double t_y) : x(t_x), y(t_y), speed(0), heading(0) {}
+
+        double getX() const { return x; }
+        double getY() const { return y; }
+
+        double x;
+        double y;
+        unsigned short speed;
+        float heading;
+
+    };
+
+    gepaf::PolylineEncoder<> encoder;
+
+    // List of DummyPoint for testing purpose
+    DummyPoint dp[] = {
+            DummyPoint{-90.0, -180.0},
+            DummyPoint{.0, .0},
+            DummyPoint{90.0, 180.0}
+    };
+
+    // Using member functions.
+    auto result = encoder.encode(dp, dp + sizeof dp / sizeof dp[0], &DummyPoint::getX, &DummyPoint::getY);
+    EXPECT_EQ(result, "~bidP~fsia@_cidP_gsia@_cidP_gsia@");
+
+    // Using member variables.
+    result = encoder.encode(dp, dp + sizeof dp / sizeof dp[0], &DummyPoint::x, &DummyPoint::y);
+    EXPECT_EQ(result, "~bidP~fsia@_cidP_gsia@_cidP_gsia@");
+}
+
 TEST(General, EmptyList)
 {
     // Empty list of points.
