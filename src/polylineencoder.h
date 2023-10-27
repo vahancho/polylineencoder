@@ -28,6 +28,7 @@
 #include <cassert>
 #include <cinttypes>
 #include <cmath>
+#include <functional>
 #include <limits>
 #include <string>
 #include <vector>
