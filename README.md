@@ -69,6 +69,37 @@ for (const auto &point : polyline) {
 }
 ```
 
+You can also use custom data structures and containers including C-style arrays.
+
+```cpp
+class Point
+{
+public:
+    Point(double t_x, double t_y) : x(t_x), y(t_y) {}
+
+    double getX() const { return x; }
+    double getY() const { return y; }
+
+    double x;
+    double y;
+};
+
+gepaf::PolylineEncoder<> encoder;
+
+// List of DummyPoint for testing purpose
+DummyPoint dp[] = {
+    Point{-90.0, -180.0},
+    Point{.0, .0},
+    Point{90.0, 180.0}
+};
+
+// Using member functions.
+auto result1 = encoder.encode(dp, dp + sizeof dp / sizeof dp[0], &DummyPoint::getX, &DummyPoint::getY);
+
+// Using member variables.
+auto result2 = encoder.encode(dp, dp + sizeof dp / sizeof dp[0], &DummyPoint::x, &DummyPoint::y);
+```
+
 ## Building and Testing
 
 There are unit tests provided for `PolylineEncoder` class template. You can find them in the *test/* directory.
